@@ -8,9 +8,9 @@ Templates can be used to give the newsletter a common style.
 The storage is filebased which means it will run on very limited webservers. There is no need for an sql database. All you need it atleas PHP5 and sufficient space.
 Private data like mail addresses is protected by a simple xor encryption.
 
-# Installation
+# Installation & Configuration
 
-You can find a step by step instruction here: [INSTALL]
+Just follow the [Installation & Configuration instructions](INSTALL.md)
 
 # Bugs
 Please report bugs via the issue tracker or send an email to schmid-thomas at gmx.net .
