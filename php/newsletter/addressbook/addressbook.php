@@ -66,8 +66,8 @@ class AddressBook {
         $this->dir = Settings::getProperty("paths.addressbook");
     }
     
-    function list() {
-        return listItems($this->dir, ["name"],["teaser"]);
+    function enumerate() {
+        return enumerateItems($this->dir, ["name"],["teaser"]);
     }
     
     function load($id) {

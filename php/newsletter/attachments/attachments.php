@@ -9,17 +9,17 @@ class Attachments {
         $this->dir = $dir;
     }
 
-    function getDirectory() {
+    public function getDirectory() {
         return $this->dir."/attachments/";
     }
     
-    function create() {
+    public function create() {
         mkdir($this->getDirectory());
     }
     
-    function list() {
+    public function enumerate() {
         if (file_exists($this->getDirectory()) === false) {
-            throw new Exception("Failed to list attachments, no directory named ". $this->getDirectory());
+            throw new Exception("Failed to enumerate attachments, no directory named ". $this->getDirectory());
         }
         
         $attachments = array_diff(scandir($this->getDirectory()), array('..', '.'));
@@ -29,7 +29,7 @@ class Attachments {
         return  $attachments;
     }
     
-    function upload($files) {
+    public function upload($files) {
 
         ensureUploadIsValid($files);
 
@@ -44,7 +44,7 @@ class Attachments {
         }
     }
     
-    function delete($attachment) {
+    public function delete($attachment) {
         $attachment = basename($attachment);
 
         if (file_exists($this->getDirectory().$attachment) === false)

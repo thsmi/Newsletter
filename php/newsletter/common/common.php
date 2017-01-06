@@ -39,12 +39,12 @@ function unlinkr($dir) {
     return rmdir($dir);
 }
 
-function listItems($dir, $items, $cryptedItems = []) {
+function enumerateItems($dir, $items, $cryptedItems = []) {
 
     $files = scandir($dir);
 
     if ($files === FALSE)
-      throw new Exception("Failed to list $dir, no such directory");
+      throw new Exception("Failed to enumerate $dir, no such directory");
 
     $files = array_diff($files, array('..', '.'));
     

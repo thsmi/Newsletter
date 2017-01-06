@@ -17,7 +17,7 @@
       .setModified(data.modified)
       .showEditor();
 
-    this.list();
+    this.enumerate();
   };
 
   Drafts.prototype.addNew = function () {
@@ -30,7 +30,7 @@
       });
   };
 
-  Drafts.prototype.onList = function (data) {
+  Drafts.prototype.onEnumerate = function (data) {
 
     var that = this;
 
@@ -46,10 +46,10 @@
     });
   };
 
-  Drafts.prototype.list = function () {
+  Drafts.prototype.enumerate = function () {
     var that = this;
-    $.post(actionURL, { action: "drafts.list" }, null, "json")
-      .done(function (data) { that.onList(data); })
+    $.post(actionURL, { action: "drafts.enumerate" }, null, "json")
+      .done(function (data) { that.onEnumerate(data); })
       .fail(function (jqxhr, textStatus, error) {
         alert(textStatus);
       });
@@ -60,7 +60,7 @@
     this.id = id;
   }
 
-  Archive.prototype.onList = function (data) {
+  Archive.prototype.onEnumerate = function (data) {
 
     var that = this;
 
@@ -76,10 +76,10 @@
     });
   };
 
-  Archive.prototype.list = function () {
+  Archive.prototype.enumerate = function () {
     var that = this;
-    $.post(actionURL, { action: "archive.list" }, null, "json")
-      .done(function (data) { that.onList(data); })
+    $.post(actionURL, { action: "archive.enumerate" }, null, "json")
+      .done(function (data) { that.onEnumerate(data); })
       .fail(function (jqxhr, textStatus, error) {
         alert(textStatus);
       });
@@ -97,7 +97,7 @@
       .setTeaser(data.teaser)
       .showEditor();
 
-    this.list();
+    this.enumerate();
   };
 
   AddressBook.prototype.addNew = function () {
@@ -112,7 +112,7 @@
 
   };
 
-  AddressBook.prototype.onList = function (data) {
+  AddressBook.prototype.onEnumerate = function (data) {
 
     var that = this;
 
@@ -125,11 +125,11 @@
     });
   };
 
-  AddressBook.prototype.list = function () {
+  AddressBook.prototype.enumerate = function () {
     var that = this;
 
-    $.post(actionURL, { action: "addresses.list" }, null, "json")
-      .done(function (data) { that.onList(data); })
+    $.post(actionURL, { action: "addresses.enumerate" }, null, "json")
+      .done(function (data) { that.onEnumerate(data); })
       .fail(function (jqxhr, textStatus, error) {
         alert(textStatus);
       });
@@ -258,7 +258,7 @@
     // show create a wait icon.
 
     this.sendRequest(
-      { action: "addresses.list" },
+      { action: "addresses.enumerate" },
       function (data) { that.onSendPopulated(data); }
     );
 
@@ -589,7 +589,7 @@
     // show create a wait icon.
 
     this.sendRequest(
-      { action: "addresses.list" },
+      { action: "addresses.enumerate" },
       function (data) { that.onSendPopulated(data); });
   };
 

@@ -136,7 +136,7 @@ class Mail {
         
         $dir = $this->context["directory"].$this->context["id"];
         
-        $items = $attachments->list();
+        $items = $attachments->enumerate();
         
         // convert the base names to qualified paths
         foreach($items as &$item) {

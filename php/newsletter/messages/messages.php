@@ -56,8 +56,8 @@ class Archive {
       return $this->dir;
     }
     
-    function list() {
-        return listItems($this->dir, ["modified", "subject", "teaser"]);
+    function enumerate() {
+        return enumerateItems($this->dir, ["modified", "subject", "teaser"]);
     }
     
     function load($id) {

@@ -30,7 +30,7 @@ function ensureValidId($dir, $id) {
 
 
 function doDraftsList() {
-    return (new Drafts())->list();
+    return (new Drafts())->enumerate();
 }
 
 function doDraftsNew($subject) {
@@ -88,7 +88,7 @@ function doDraftsSave($id, $subject, $message) {
 
 function doDraftsAttachmentsList($id) {
 
-    $attachments = (new Drafts())->load($id)->getAttachments()->list();
+    $attachments = (new Drafts())->load($id)->getAttachments()->enumerate();
     return [
     "id" => $id,
     "attachments" => $attachments
@@ -139,7 +139,7 @@ function doDraftsSend($id, $addresses) {
 
 
 function doArchivesList() {
-    return (new Archive())->list();
+    return (new Archive())->enumerate();
 }
 
 function doArchiveLoad($id) {
@@ -171,13 +171,13 @@ function doArchiveSend($id, $addresses) {
 function doArchiveAttachmentsList($dir, $id) {
     return [
     "id" => $id,
-    "attachments" => listAttachments($dir.$id)
+    "attachments" => enumerateAttachments($dir.$id)
     ];
 }
 
 
 function doAddressBookList() {
-    return (new AddressBook())->list();
+    return (new AddressBook())->enumerate();
 }
 
 function doAddressBookNew($name) {

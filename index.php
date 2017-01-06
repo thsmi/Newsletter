@@ -106,13 +106,13 @@ require_once("php/newsletter/security/principal.php");
             (new Drafts("#divDrafts")).addNew();
           }
 
-          function listDrafts() {
-            (new Drafts("#divDrafts")).list();
+          function enumerateDrafts() {
+            (new Drafts("#divDrafts")).enumerate();
           }
 
 
-          function listArchives() {
-            (new Archive("#divArchives")).list();
+          function enumerateArchives() {
+            (new Archive("#divArchives")).enumerate();
           }
 
 
@@ -120,14 +120,14 @@ require_once("php/newsletter/security/principal.php");
             (new AddressBook("#divAddresses")).addNew();
           }
 
-          function listAddresses() {
-            (new AddressBook("#divAddresses")).list();
+          function enumerateAddresses() {
+            (new AddressBook("#divAddresses")).enumerate();
           }
 
           function onRefresh() {
-            listArchives();
-            listDrafts();
-            listAddresses();
+            enumerateArchives();
+            enumerateDrafts();
+            enumerateAddresses();
           }
 
 

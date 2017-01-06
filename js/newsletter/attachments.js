@@ -14,7 +14,7 @@
     return $("#attachments-" + this.id);
   };
 
-  AttachmentViewer.prototype.onList = function (data) {
+  AttachmentViewer.prototype.onEnumerate = function (data) {
 
     var that = this;
     this.getElement().find(".attachments-list").hide();
@@ -32,12 +32,12 @@
     });
   };
 
-  AttachmentViewer.prototype.list = function () {
+  AttachmentViewer.prototype.enumerate = function () {
 
     var that = this;
 
-    $.post(actionURL, { action: "" + this.type + ".attachments.list", id: this.id }, null, "json")
-      .done(function (data) { that.onList(data); })
+    $.post(actionURL, { action: "" + this.type + ".attachments.enumerate", id: this.id }, null, "json")
+      .done(function (data) { that.onEnumerate(data); })
       .fail(function (jqxhr, textStatus, error) {
         alert(textStatus);
       });
@@ -68,7 +68,7 @@
     elm.on('hidden.bs.modal', function () { that.getElement().remove(); });
     elm.modal();
 
-    this.list();
+    this.enumerate();
     return this;
   };
 
@@ -88,7 +88,7 @@
     var that = this;
 
     $.post(actionURL, { action: "drafts.attachments.delete", id: this.id, attachment: name }, null, "json")
-      .done(function (data) { that.onList(data); })
+      .done(function (data) { that.onEnumerate(data); })
       .fail(function (jqxhr, textStatus, error) {
         alert(textStatus);
       });
@@ -96,7 +96,7 @@
 
   AttachmentEditor.prototype.onUploaded = function (data) {
     this.getElement().find(".attachments-image-input-form")[0].reset();
-    this.onList(JSON.parse(data));
+    this.onEnumerate(JSON.parse(data));
   };
 
   AttachmentEditor.prototype.onUpload = function () {

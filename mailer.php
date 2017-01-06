@@ -12,7 +12,7 @@ function doDrafts($action, $request) {
     
     $dir = Settings::getProperty("paths.drafts");
     
-    if ($action === "list")
+    if ($action === "enumerate")
         return doDraftsList();
     
     if ($action === "new")
@@ -36,7 +36,7 @@ function doDrafts($action, $request) {
         return doDraftsSend($id, $request["addresses"]);
     
     
-    if ($action === "attachments.list")
+    if ($action === "attachments.enumerate")
         return doDraftsAttachmentsList($id);
     
     if ($action === "attachments.upload")
@@ -57,7 +57,7 @@ function doArchive($action, $request) {
     
     $dir = Settings::getProperty("paths.archive");
     
-    if ($action === "list")
+    if ($action === "enumerate")
         return doArchivesList();
     
     $id = $request["id"];
@@ -70,7 +70,7 @@ function doArchive($action, $request) {
         return doArchiveSend($id, $request["addresses"]);
     
     
-    if ($action === "attachments.list")
+    if ($action === "attachments.enumerate")
         return doArchiveAttachmentsList($dir, $id);
     
     throw new Excpetion ("Unkonw action $action");
@@ -78,7 +78,7 @@ function doArchive($action, $request) {
 
 function doAddressBook($action, $request) {
     
-    if ($action === "list")
+    if ($action === "enumerate")
         return doAddressBookList();
     
    if (Principal::canEdit("addressbook") === false) 
