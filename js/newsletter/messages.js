@@ -2,145 +2,7 @@
 
   "use strict";
 
-  function AttachmentViewer(id) {
-    this.id = id;
-    this.template = "tplAttachments";
-    this.type = "archive";
-  }
-
-  AttachmentViewer.prototype.getElement = function () {
-    return $("#attachments-" + this.id);
-  };  
-  
-  AttachmentViewer.prototype.onList = function (data) {
-
-    var that = this;
-    this.getElement().find(".attachments-list").hide();
-    this.getElement().find(".attachments-list-item").empty();
-
-    data.attachments.forEach(function (name) {
-      var elm = $("#tplAttachmentItem").find("tr").clone();
-
-      that.onInitItem(elm, name);
-
-      elm.find(".att-item-name").text(name);
-
-      that.getElement().find(".attachments-list").show();
-      that.getElement().find(".attachments-list-item").append(elm);
-    });
-  };
-  
-  AttachmentViewer.prototype.list = function () {
-
-    var that = this;
-
-    $.post("mailer.php", { action: ""+this.type+".attachments.list", id: this.id }, null, "json")
-      .done(function (data) { that.onList(data); })
-      .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
-      });
-    return this;
-  };  
-
-AttachmentViewer.prototype.onInitItem = function(elm, name) {
-};
-
-AttachmentViewer.prototype.onInit = function(elm) {
-};
- 
-  AttachmentViewer.prototype.show = function () {
-
-    var that = this;
-
-    var elm = $("#" + this.template).children().first().clone();
-    elm.attr("id", "attachments-" + this.id);
-
-    $("#divAttachments")
-      .empty()
-      .append(elm);
-
-    elm.find(".attachments-list-item").empty();
-    elm.find(".attachments-list").hide();
-    this.onInit(elm);    
-
-    elm.on('hidden.bs.modal', function () { that.getElement().remove(); });
-    elm.modal();
-
-    this.list();
-    return this;
-  };
-
-
-  function AttachmentEditor(id) {
-
-    AttachmentViewer.call(this, id);
-    this.template = "tplAttachments";
-    this.type="drafts";
-  }
-
-  AttachmentEditor.prototype = Object.create(AttachmentViewer.prototype);
-  AttachmentEditor.prototype.constructor = AttachmentEditor;
-  
-  AttachmentEditor.prototype.onDelete = function (name) {
-
-    var that = this;
-
-    $.post("mailer.php", { action: "drafts.attachments.delete", id: this.id, attachment: name }, null, "json")
-      .done(function (data) { that.onList(data); })
-      .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
-      });
-  };
-
-  AttachmentEditor.prototype.onUploaded = function (data) {    
-    this.getElement().find(".attachments-image-input-form")[0].reset();
-    this.onList(JSON.parse(data));
-  };
-
-  AttachmentEditor.prototype.onUpload = function () {
-    var that = this;
-    var files = this.getElement().find(".attachments-image-input")[0].files;
-
-    if (!files.length)
-      return;
-
-    var data = new FormData();
-    data.append("file", files[0]);
-    data.append("action", "drafts.attachments.upload");
-    data.append("id", this.id);
-
-    $.ajax({
-      data: data,
-      type: "POST",
-      url: "./mailer.php",
-      cache: false,
-      contentType: false,
-      processData: false
-    })
-      .done(function (data) { that.onUploaded(data); })
-      .fail(function (jqxhr, textStatus, error) {
-        alert(jqxhr.responseText);
-      });
-  };
-
-AttachmentEditor.prototype.onInitItem = function(parent, name) {
-   var that = this;
-   
-   var elm = $("#tplAttachmentItemAction").children().first().clone();
-   elm.click(function () { that.onDelete(name); });
-
-   parent.find(".att-item-action").append(elm);
-};  
-
-AttachmentEditor.prototype.onInit = function(parent) {
-
-  var that = this;
-  var elm = $("#tplAttachmentUpload").children().first().clone();
-  elm.find(".attachments-upload").click(function () { that.onUpload(); });
-
-  elm.insertBefore(parent.find(".attachments-list"));
-};
-
+  var actionURL = "mailer.php";
 
   function Drafts(id) {
     this.id = id;
@@ -161,7 +23,7 @@ AttachmentEditor.prototype.onInit = function(parent) {
   Drafts.prototype.addNew = function () {
     var that = this;
 
-    $.post("mailer.php", { action: "drafts.new", subject: "Unnamed" }, null, "json")
+    $.post(actionURL, { action: "drafts.new", subject: "Unnamed" }, null, "json")
       .done(function (data) { that.onNew(data); })
       .fail(function (jqxhr, textStatus, error) {
         alert(textStatus);
@@ -186,7 +48,7 @@ AttachmentEditor.prototype.onInit = function(parent) {
 
   Drafts.prototype.list = function () {
     var that = this;
-    $.post("mailer.php", { action: "drafts.list" }, null, "json")
+    $.post(actionURL, { action: "drafts.list" }, null, "json")
       .done(function (data) { that.onList(data); })
       .fail(function (jqxhr, textStatus, error) {
         alert(textStatus);
@@ -216,7 +78,7 @@ AttachmentEditor.prototype.onInit = function(parent) {
 
   Archive.prototype.list = function () {
     var that = this;
-    $.post("mailer.php", { action: "archive.list" }, null, "json")
+    $.post(actionURL, { action: "archive.list" }, null, "json")
       .done(function (data) { that.onList(data); })
       .fail(function (jqxhr, textStatus, error) {
         alert(textStatus);
@@ -242,7 +104,7 @@ AttachmentEditor.prototype.onInit = function(parent) {
 
     var that = this;
 
-    $.post("mailer.php", { action: "addresses.new", name: "Unnamed" }, null, "json")
+    $.post(actionURL, { action: "addresses.new", name: "Unnamed" }, null, "json")
       .done(function (data) { that.onNew(data); })
       .fail(function (jqxhr, textStatus, error) {
         alert(textStatus);
@@ -266,7 +128,7 @@ AttachmentEditor.prototype.onInit = function(parent) {
   AddressBook.prototype.list = function () {
     var that = this;
 
-    $.post("mailer.php", { action: "addresses.list" }, null, "json")
+    $.post(actionURL, { action: "addresses.list" }, null, "json")
       .done(function (data) { that.onList(data); })
       .fail(function (jqxhr, textStatus, error) {
         alert(textStatus);
@@ -321,7 +183,7 @@ AttachmentEditor.prototype.onInit = function(parent) {
   // populate the send button..
   AbstractListItem.prototype.sendRequest = function (msg, callback) {
     var that = this;
-    $.post("mailer.php", msg, null, "json")
+    $.post(actionURL, msg, null, "json")
       .done(callback)
       .fail(function (jqXHR, textStatus, error) { that.onError(jqXHR.responseText); });
 
@@ -339,9 +201,20 @@ AttachmentEditor.prototype.onInit = function(parent) {
 
     var that = this;
 
-    element.find(".msg-list-header").click(function () { that.showTeaser(); });
+    element.find(".msg-list-header").click(function () { that.toggle(); });
     element.find(".msg-list").click(function () { that.showDetails(); });
   };
+
+  ArchiveItem.prototype.toggle = function () {
+
+    if ($("#" + this.id + "-editor").length) {
+      this.showTeaser();
+      return;
+    }
+
+    this.showDetails();
+    return;
+  };  
 
   ArchiveItem.prototype.setModified = function (timestamp) {
     // Create a new JavaScript Date object based on the timestamp
@@ -411,6 +284,9 @@ AttachmentEditor.prototype.onInit = function(parent) {
       .hide();
 
     var elm = $("#tplArchiveItemDetail").children().first().clone();
+    elm
+      .attr("id", "" + this.id + "-editor");
+
     elm.find(".msg-list-details-msg")
       .html(data.message)
       .click(function () { that.showTeaser(); });
@@ -426,7 +302,10 @@ AttachmentEditor.prototype.onInit = function(parent) {
   };
 
   ArchiveItem.prototype.showTeaser = function () {
-    $("#" + this.id).find(".msg-list-details").remove();
+
+    $("#" + this.id + "-editor")
+      .remove();
+
     $("#" + this.id)
       .children(".msg-list")
       .show();
@@ -570,11 +449,22 @@ AttachmentEditor.prototype.onInit = function(parent) {
     var that = this;
 
 
+    element.find(".msg-list-header").click(function () { that.toggle(); });
     element.find(".msg-list").click(function () { that.showEditor(); });
-    element.find(".msg-list-header").click(function () { that.showTeaser(); });
 
     return this;
   };
+
+  DraftItem.prototype.toggle = function () {
+
+    if ($("#" + this.id + "-editor").length) {
+      this.showTeaser();
+      return;
+    }
+
+    this.showEditor();
+    return;
+  };  
 
   DraftItem.prototype.onError = function (message) {
     alert(message);
@@ -651,6 +541,7 @@ AttachmentEditor.prototype.onInit = function(parent) {
       callback = function (data) {
         that.setTeaser(data.teaser);
         that.setSubject(data.subject);
+        that.setModified(data.modified);
       };
     }
 
@@ -787,7 +678,7 @@ AttachmentEditor.prototype.onInit = function(parent) {
     $.ajax({
       data: data,
       type: "POST",
-      url: "./mailer.php",
+      url: actionURL,
       cache: false,
       contentType: false,
       processData: false

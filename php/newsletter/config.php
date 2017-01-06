@@ -1,5 +1,16 @@
-<?php
+<?php 
 
+function encrypt($data) {
+    return base64_encode(xorString($data));
+}
+
+function decrypt($data) {
+    $data = base64_decode($data, true);
+    if ($data === false)
+      throw new Exception("Failed to decode stream");
+
+    return xorString($data);
+}
 
 function xorString($string) {
     
@@ -13,40 +24,6 @@ function xorString($string) {
     }
     
     return $string;
-}
-
-function getDraftsDirectory() {
-    return "data/drafts/";
-}
-
-function getArchiveDirectory() {
-    return "data/archive/";
-}
-
-function getAddressBookDirectory() {
-    return "data/addresses/";
-}
-
-function getTemplate() {
-    return "templates/template.tpl";
-}
-
-function initPhpMailer($mail) {
-    //$mail->SMTPDebug = 3;
-    
-    $mail->Host = "smtp.example.com";
-    $mail->SMTPAuth = true;
-    $mail->Username = "me@example.com";
-    $mail->Password = "secret";
-    $mail->SMTPSecure = 'tls';
-    $mail->Port = 587;
-    
-    $mail->setFrom("me@example.com","Newsletter");
-    $mail->addReplyTo("me@example.com", "Newsletter");
-}
-
-function getSubjectPrefix() {
-    return "[ME] ";
 }
 
 ?>
