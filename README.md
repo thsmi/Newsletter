@@ -10,7 +10,7 @@ Private data like mail addresses is protected by a simple xor encryption.
 
 # Installation & Configuration
 
-Just follow the [Installation & Configuration instructions](CONTRIBUTING.md)
+Just follow the [Installation & Configuration instructions](INSTALL.md)
 
 # Bugs
 Please report bugs via the issue tracker or send an email to schmid-thomas at gmx.net .
