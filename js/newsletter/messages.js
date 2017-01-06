@@ -116,6 +116,8 @@
 
     var that = this;
 
+    data.sort(function (a, b) { return a.name > b.name; });
+
     data.forEach(function (item) {
 
       (new AddressListItem(item.id))
@@ -238,6 +240,8 @@
 
   ArchiveItem.prototype.onSendPopulated = function (data) {
     var that = this;
+
+    data.sort(function (a, b) { return a.name > b.name; });
 
     data.forEach(function (item) {
 
@@ -569,6 +573,8 @@
 
   DraftItem.prototype.onSendPopulated = function (data) {
     var that = this;
+
+    data.sort(function (a, b) { return a.name > b.name; });
 
     data.forEach(function (item) {
 
