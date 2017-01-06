@@ -28,7 +28,7 @@ class AddressBookItem extends AbstractItem{
         
         $recipients = $this->getAddresses();
         // Split the address book into individual entries. Delimiters are linebreaks and semicoli
-        $recipients = preg_split("/\\r\\n|\\r|\\n|;/", $recipients);
+        $recipients = preg_split("/\\r\\n|\\r|\\n|;|,/", $recipients);
         // then ignore all empty files.
         $recipients = array_map('trim', $recipients);
         $recipients = array_filter($recipients, function($value) { return $value !== ''; });
