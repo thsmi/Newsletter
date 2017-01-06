@@ -30,7 +30,6 @@ require_once("php/newsletter/security/principal.php");
 
 
       <?php require("php/newsletter/attachments/attachments.tpl"); ?>
-        <?php require("php/newsletter/images/images.tpl") ?>
           <?php require("php/newsletter/messages/messages.tpl") ?>
             <?php require("php/newsletter/addressbook/addressbook.tpl") ?>
     </div>
