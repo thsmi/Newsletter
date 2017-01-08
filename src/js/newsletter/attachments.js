@@ -25,7 +25,11 @@
 
       that.onInitItem(elm, name);
 
-      elm.find(".att-item-name").text(name);
+      elm.find(".att-item-name")
+        .text(name)
+        .attr("href", data.path+name)        
+        //.attr("download")
+        .attr("target", "_blank");
 
       that.getElement().find(".attachments-list").show();
       that.getElement().find(".attachments-list-item").append(elm);
@@ -129,7 +133,7 @@
     var that = this;
 
     var elm = $("#tplAttachmentItemAction").children().first().clone();
-    elm.click(function () { that.onDelete(name); });
+    elm.click(function () { that.onDelete(name); });    
 
     parent.find(".att-item-action").append(elm);
   };

@@ -37,7 +37,7 @@ function doDrafts($action, $request) {
     
     
     if ($action === "attachments.enumerate")
-        return doDraftsAttachmentsList($id);
+        return doDraftsAttachmentsEnumerate($id);
     
     if ($action === "attachments.upload")
         return doDraftsAttachmentsUpload($id, $_FILES['file'] );

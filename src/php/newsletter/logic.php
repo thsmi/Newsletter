@@ -86,12 +86,14 @@ function doDraftsSave($id, $subject, $message) {
     
 }
 
-function doDraftsAttachmentsList($id) {
+function doDraftsAttachmentsEnumerate($id) {
 
-    $attachments = (new Drafts())->load($id)->getAttachments()->enumerate();
+    $attachments = (new Drafts())->load($id)->getAttachments();
+
     return [
     "id" => $id,
-    "attachments" => $attachments
+    "attachments" => $attachments->enumerate(),
+    "path" => $attachments->getDirectory()
     ];
 }
 
@@ -101,13 +103,13 @@ function doDraftsAttachmentsUpload($id, $files) {
 
     (new Drafts())->load($id)->getAttachments()->upload($files);
     
-    return doDraftsAttachmentsList($id);
+    return doDraftsAttachmentsEnumerate($id);
 }
 
 function doDraftsAttachmentsDelete($id, $attachment) {
     
     (new Drafts())->load($id)->getAttachments()->delete($attachment);
-    return doDraftsAttachmentsList($id);
+    return doDraftsAttachmentsEnumerate($id);
 }
 
 function doDraftsImagesUpload($id, $files) {
@@ -170,11 +172,12 @@ function doArchiveSend($id, $addresses) {
 
 function doArchiveAttachmentsEnumerate($id) {
 
-    $attachments = (new Archive())->load($id)->getAttachments()->enumerate();
+    $attachments = (new Archive())->load($id)->getAttachments();    
 
     return [
     "id" => $id,
-    "attachments" => $attachments
+    "attachments" => $attachments->enumerate(),
+    "path" => $attachments->getDirectory()
     ];
 }
 

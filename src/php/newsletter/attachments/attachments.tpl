@@ -56,7 +56,7 @@
   <table>
     <tbody>
       <tr>
-        <td class="att-item-name">Name</td>
+        <td><a class="att-item-name">Name</a></td>
         <td class="att-item-action" style="text-align: right">&nbsp;</td>
 </tr>
 </tbody>
