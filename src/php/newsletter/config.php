@@ -12,16 +12,26 @@ function decrypt($data) {
     return xorString($data);
 }
 
+/**
+ * XORs a string.
+ *
+ * The key which is loaded from the settings directory.
+ * 
+ * @param $string - the string which should be XORed.
+ * @return the XORed string.
+ *
+ * @throws an exception in case the keyfile is empty or non existant.
+ */
 function xorString($string) {
     
     $key = file_get_contents("settings/keyfile");
     if ($key === FALSE)
         throw new Exception("Failed to load keyfile");
+
+    if (strlen($key) === 0)
+      throw new Exception("Keyfile is empty");
     
-    // TODO should be read from a config file
- //   $key = "Mu8reeshieraisoohaidaeyuleekohnayaighiechahthiebaosahheecahl";
     $length = min(strlen($key),strlen($string));
-    
     
     for($i = 0; $i < $length; $i++) {
         $string[$i] = ($string[$i] ^ $key[$i % $length]);
