@@ -31,17 +31,25 @@
 
   <h3>Mail</h3>
   <div class="form-group">
-    <label for="example-text-input" class="control-label col-sm-2">Template</label>
+    <label for="newsletter-settings-template" class="control-label col-sm-2">Template</label>
     <div class="col-sm-9">
       <input class="form-control" type="text" id="newsletter-settings-template">
     </div>
   </div>
   <div class="form-group">
-    <label for="example-text-input" class="control-label col-sm-2">Prefix</label>
+    <label for="newsletter-settings-prefix" class="control-label col-sm-2">Prefix</label>
     <div class="col-sm-9">
       <input class="form-control" type="text" id="newsletter-settings-prefix">
     </div>
   </div>
+
+  <div class="form-group">
+    <label for="newsletter-settings-sender" class="control-label col-sm-2">Sender</label>
+    <div class="col-sm-9">
+      <input class="form-control" type="email" id="newsletter-settings-sender">
+    </div>
+  </div>
+  
   <div class="form-group">
     <label for="example-email-input" class="control-label col-sm-2">From</label>
     <div class="col-sm-9">

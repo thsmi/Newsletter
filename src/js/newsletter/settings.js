@@ -23,6 +23,7 @@
     $("#newsletter-settings-prefix").val(data.prefix);
     $("#newsletter-settings-from").val(data.from);
     $("#newsletter-settings-replyto").val(data.replyto);
+    $("#newsletter-settings-sender").val(data.sender);
   }
 
 
@@ -42,7 +43,8 @@
       template: $("#newsletter-settings-template").val(),
       prefix: $("#newsletter-settings-prefix").val(),
       from: $("#newsletter-settings-from").val(),
-      replyto: $("#newsletter-settings-replyto").val()
+      replyto: $("#newsletter-settings-replyto").val(),
+      sender : $("#newsletter-settings-sender").val()
     };
 
     $.post(actionURL, request, null, "json")
@@ -67,7 +69,6 @@
 
 
   function onServerSettingsLoaded(data) {
-    debugger;
     $("#newsletter-settings-server-type").text(data["server.type"]);
     //$("#newsletter-settings-server-timeout").val(data["server.type"]);
 

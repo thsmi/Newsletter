@@ -121,7 +121,8 @@ function doSettings($action, $request) {
         "template" =>Settings::getProperty("mail.template"),
         "prefix" => Settings::getProperty("mail.prefix"),
         "from" => Settings::getProperty("mail.from"),
-        "replyto" => Settings::getProperty("mail.replyto")
+        "replyto" => Settings::getProperty("mail.replyto"),
+        "sender" => Settings::getProperty("mail.sender")
         ];
     }
     
@@ -129,7 +130,8 @@ function doSettings($action, $request) {
         Settings::setProperty("mail.template", $request["template"]);
         Settings::setProperty("mail.prefix", $request["prefix"]);
         Settings::setProperty("mail.from", $request["from"]);
-        Settings::setProperty("mail.replyto", $request["replyto"]);
+        Settings::setProperty("mail.replyto", $request["replyto"]);        
+        Settings::setProperty("mail.sender", $request["sender"]);
         
         return [];
     }

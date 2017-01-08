@@ -104,6 +104,7 @@ class Mail {
         
         $this->context["from"] = Settings::getProperty("mail.from");
         $this->context["replyto"] = Settings::getProperty("mail.replyto");
+        $this->context["sender"] = Settings::getProperty("mail.sender");
         
         $this->setAttachments($item->getAttachments());
         $this->setEmbeddedImages($item->getImages());
@@ -198,8 +199,8 @@ class Mail {
         // We send the mail as ISO-8859-1 for compatibility reasons.
         $mail->CharSet = 'ISO-8859-1';
         
-        $mail->setFrom($this->context["from"],"Newsletter");
-        $mail->addReplyTo($this->context["replyto"], "Newsletter");
+        $mail->setFrom($this->context["from"],$this->context["sender"]);
+        $mail->addReplyTo($this->context["replyto"],$this->context["sender"]);
         $mail->Subject = utf8_decode($this->context["subject"]);
         
         $mail->isHTML(true);
@@ -217,8 +218,8 @@ class Mail {
             $mail->AddEmbeddedImage($image["filename"], $image["cid"]);
         }
         
-        $error = [];        
-
+        $error = [];
+        
         foreach ($this->context["recipients"] as $recipient) {
             $mail->addAddress($recipient);
             
