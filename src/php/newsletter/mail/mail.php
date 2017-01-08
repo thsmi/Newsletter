@@ -158,9 +158,23 @@ class Mail {
         $this->context["message"] = $rewriter->getHtmlBody();
         $this->context["images"] = array_merge($this->context["images"], $rewriter->getImages());
     }
-    
+
+    /**
+     * Defines to which recipients the mail should be send.
+     *
+     *  @param $addresses - the address book which contains the recipients.
+     *
+     *  @throws throws an excpetion in case the addres book is empty.
+     */
     function setAddresses(AddressBookItem $addresses) {
-        $this->context["recipients"] =  $addresses->getRecipients();
+
+        $recipient = $addresses->getRecipients();
+
+        if (count($recipient) === 0) {
+            throw new Exception("Can not send a mail to an empty address book.");
+        }
+
+        $this->context["recipients"] = $recipient;
     }
     
     function createMailer() {
