@@ -624,6 +624,7 @@
         /*height: 150,
         minHeight: 150,
         maxHeight: 150,*/
+        styleWithSpan : false,
         focus: true,
         toolbar: [
           ['fontsize', ["style", 'fontname', 'fontsize']],

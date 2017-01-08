@@ -1,0 +1,9 @@
+/* 
+You can set the summernote font-family via the following line 
+It should be the same as in your template file
+*/
+
+.msg-editor .note-editable {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 12px;
+}

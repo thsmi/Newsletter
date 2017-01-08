@@ -14,8 +14,11 @@ require_once("php/newsletter/security/principal.php");
     <link href="./js/bootstrap/bootstrap.css" rel="stylesheet">
     <script src="./js/jquery/jquery.js"></script>
     <script src="./js/bootstrap/bootstrap.js"></script>
+
     <link href="./js/summernote/summernote.css" rel="stylesheet">
     <script src="./js/summernote/summernote.js"></script>
+
+    <link href="./js/newsletter/newsletter.css" rel="stylesheet">
 
     <script src="./js/newsletter/attachments.js"></script>
     <script src="./js/newsletter/messages.js"></script>
