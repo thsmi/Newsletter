@@ -46,7 +46,7 @@ class Settings {
         
         Settings::$items[$path[0]][$path[1]] = $value;
         
-        file_put_contents( "settings/".$path[0].".json", json_encode(Settings::$items[$path[0]]));
+        file_put_contents( "settings/".$path[0].".json", json_encode(Settings::$items[$path[0]], JSON_PRETTY_PRINT));
     }
     
 }
