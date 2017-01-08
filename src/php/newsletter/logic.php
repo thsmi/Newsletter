@@ -168,10 +168,13 @@ function doArchiveSend($id, $addresses) {
     return [];
 }
 
-function doArchiveAttachmentsList($dir, $id) {
+function doArchiveAttachmentsEnumerate($id) {
+
+    $attachments = (new Archive())->load($id)->getAttachments()->enumerate();
+
     return [
     "id" => $id,
-    "attachments" => enumerateAttachments($dir.$id)
+    "attachments" => $attachments
     ];
 }
 

@@ -71,7 +71,7 @@ function doArchive($action, $request) {
     
     
     if ($action === "attachments.enumerate")
-        return doArchiveAttachmentsList($dir, $id);
+        return doArchiveAttachmentsEnumerate($id);
     
     throw new Excpetion ("Unkonw action $action");
 }
@@ -111,8 +111,13 @@ function doSettings($action, $request) {
         
         return [
         "archive" => Settings::getProperty("paths.archive"),
+        "archive.real" => realpath(Settings::getProperty("paths.archive")),
         "drafts" => Settings::getProperty("paths.drafts"),
-        "addressbook" => Settings::getProperty("paths.addressbook")
+        "drafts.real" => realpath(Settings::getProperty("paths.drafts")),
+        "addressbook" => Settings::getProperty("paths.addressbook"),
+        "addressbook.real" => realpath(Settings::getProperty("paths.addressbook")),
+        "templates" => Settings::getProperty("paths.templates"),
+        "templates.real" => realpath(Settings::getProperty("paths.templates"))
         ];
     }
     
@@ -216,8 +221,6 @@ function doRequest($request) {
     
     throw new Exception("Invalid Request ".$action[0]);
 }
-//echo $_SERVER["REMOTE_USER"];
-//echo $_SERVER["REDIRECT_REMOTE_USER"];
 
 try {
     $response = [];

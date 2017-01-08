@@ -9,6 +9,7 @@
     <label class="control-label col-sm-2">Drafts</label>
     <div class="col-sm-10">
       <p class="form-control-static" id="newsletter-settings-drafts"></p>
+      <p class="form-control-static" id="newsletter-settings-drafts-real"></p>
     </div>
   </div>
 
@@ -16,6 +17,7 @@
     <label class="control-label col-sm-2">Archive</label>
     <div class="col-sm-10">
       <p class="form-control-static" id="newsletter-settings-archive"></p>
+      <p class="form-control-static" id="newsletter-settings-archive-real"></p>
     </div>
   </div>
 
@@ -24,6 +26,15 @@
     <label class="control-label col-sm-2">Address&nbsp;Book</label>
     <div class="col-sm-10">
       <p class="form-control-static" id="newsletter-settings-addressbook"></p>
+      <p class="form-control-static" id="newsletter-settings-addressbook-real"></p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label col-sm-2">Templates</label>
+    <div class="col-sm-10">
+      <p class="form-control-static" id="newsletter-settings-templates"></p>
+      <p class="form-control-static" id="newsletter-settings-templates-real"></p>
     </div>
   </div>
 

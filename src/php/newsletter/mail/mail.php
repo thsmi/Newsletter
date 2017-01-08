@@ -25,7 +25,7 @@ class ImageRewriter {
         
     }
     
-    function rewrite($dir) {
+    function rewrite($dir, $dest="cid:") {
         $doc = $this->doc;
         $elements = $doc->getElementsByTagName ('img');
         
@@ -58,7 +58,7 @@ class ImageRewriter {
                 continue;
             }
             
-            $element->setAttribute("src", "cid:$name");
+            $element->setAttribute("src", $dest.$name);
             
             $this->images[] = [
             "filename" => realpath($dir."/".$name),
@@ -108,12 +108,12 @@ class Mail {
         
         $this->setAttachments($item->getAttachments());
         $this->setEmbeddedImages($item->getImages());
-        $this->setTemplate(Settings::getProperty("mail.template"));
+        $this->setTemplate(Settings::getProperty("paths.templates").Settings::getProperty("mail.template"));
     }
     
     private function setTemplate($path) {
         
-        $template = file_get_contents($path);
+        $template = @file_get_contents($path);
         if( $template === FALSE) {
             throw new Exception("Could not load template from $path");
         }

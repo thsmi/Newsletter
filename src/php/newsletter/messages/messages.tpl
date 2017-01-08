@@ -1,5 +1,9 @@
 <!-- drafts -->
 
+<div id="tplMessagePreview">
+
+</div>
+
 <div id="tplArchiveItem">
   <div class="panel panel-default">
     <div class="panel-heading msg-list-header">
@@ -36,6 +40,9 @@
 
 <div style="text-align: right">
 <button type="button" class="btn msg-editor-attachments">Attachments</button>
+&emsp;
+<button type="button" class="btn msg-editor-preview">Preview</button>
+&emsp;
 <button type="button" class="btn msg-editor-delete">Delete</button>
 <button type="button" class="btn msg-editor-save">Save</button>
 <div class="dropdown msg-editor-send dropup" style="display: inline">

@@ -643,13 +643,22 @@
       .find(".msg-editor-summernote")
       .summernote('code', data.message);
 
+    editor.find(".msg-editor-preview").click(function () { that.preview(); });  
     editor.find(".msg-editor-delete").click(function () { that.delete(); });
     editor.find(".msg-editor-save").click(function () { that.save(); });
-    editor.find(".msg-editor-attachments").click( function() { (new AttachmentEditor(that.id)).show(); });
+    editor.find(".msg-editor-attachments").click( function() { that.showAttachments(); });
 
     editor.find(".dropdown").on('show.bs.dropdown', function () { that.populateSend(); });
 
     editor.appendTo("#" + this.id);
+  };
+
+  DraftItem.prototype.preview = function() {
+    window.open("preview.php?id="+this.id);
+  };
+
+  DraftItem.prototype.showAttachments = function() {
+    (new AttachmentEditor(this.id)).show();
   };
 
   DraftItem.prototype.showEditor = function () {

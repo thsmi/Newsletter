@@ -8,6 +8,12 @@
     $("#newsletter-settings-archive").text(data.archive);
     $("#newsletter-settings-drafts").text(data.drafts);
     $("#newsletter-settings-addressbook").text(data.addressbook);
+    $("#newsletter-settings-templates").text(data.templates);
+
+    $("#newsletter-settings-archive-real").text(data["archive.real"]);
+    $("#newsletter-settings-drafts-real").text(data["drafts.real"]);
+    $("#newsletter-settings-addressbook-real").text(data["addressbook.real"]);
+    $("#newsletter-settings-templates-real").text(data["templates.real"]);    
   }
 
   function loadPathsSettings() {
