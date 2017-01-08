@@ -4,8 +4,16 @@
     <p>
       Select the files which should be attached to the newsletter.
     </p>
+    <div class="attachments-upload-progress" style="display:none">
+ <div class="progress">
+  <div class="progress-bar progress-bar-striped active" role="progressbar"
+  aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+    Uploading file, please wait...
+  </div>
+</div>      
+    </div>
 
-    <div class="input-group">
+    <div class="input-group attachments-upload-input">
       <input class="attachments-image-input form-control" type="file" name="files" multiple="multiple" placeholder="Select file">
       <span class="input-group-btn">
           <button class="btn btn-default attachments-upload" type="button">Attach</button>

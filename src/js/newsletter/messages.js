@@ -26,7 +26,7 @@
     $.post(actionURL, { action: "drafts.new", subject: "Unnamed" }, null, "json")
       .done(function (data) { that.onNew(data); })
       .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
+        alert(jqxhr.responseText);
       });
   };
 
@@ -51,7 +51,7 @@
     $.post(actionURL, { action: "drafts.enumerate" }, null, "json")
       .done(function (data) { that.onEnumerate(data); })
       .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
+        alert(jqxhr.responseText);
       });
   };
 
@@ -81,7 +81,7 @@
     $.post(actionURL, { action: "archive.enumerate" }, null, "json")
       .done(function (data) { that.onEnumerate(data); })
       .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
+        alert(jqxhr.responseText);
       });
   };
 
@@ -107,7 +107,7 @@
     $.post(actionURL, { action: "addresses.new", name: "Unnamed" }, null, "json")
       .done(function (data) { that.onNew(data); })
       .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
+        alert(jqxhr.responseText);
       });
 
   };
@@ -133,7 +133,7 @@
     $.post(actionURL, { action: "addresses.enumerate" }, null, "json")
       .done(function (data) { that.onEnumerate(data); })
       .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
+        alert(jqxhr.responseText);
       });
   };
 
@@ -187,7 +187,7 @@
     var that = this;
     $.post(actionURL, msg, null, "json")
       .done(callback)
-      .fail(function (jqXHR, textStatus, error) { that.onError(jqXHR.responseText); });
+      .fail(function (jqxhr, textStatus, error) { that.onError(jqxhr.responseText); });
 
   };
 

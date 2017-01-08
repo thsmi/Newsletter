@@ -27,7 +27,7 @@
 
       elm.find(".att-item-name")
         .text(name)
-        .attr("href", data.path+name)        
+        .attr("href", data.path + name)
         //.attr("download")
         .attr("target", "_blank");
 
@@ -43,7 +43,7 @@
     $.post(actionURL, { action: "" + this.type + ".attachments.enumerate", id: this.id }, null, "json")
       .done(function (data) { that.onEnumerate(data); })
       .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
+        alert(jqxhr.responseText);
       });
     return this;
   };
@@ -94,14 +94,19 @@
     $.post(actionURL, { action: "drafts.attachments.delete", id: this.id, attachment: name }, null, "json")
       .done(function (data) { that.onEnumerate(data); })
       .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
+        alert(jqxhr.responseText);
       });
   };
 
   AttachmentEditor.prototype.onUploaded = function (data) {
+
+    this.getElement().find(".attachments-upload-progress").hide();
+    this.getElement().find(".attachments-upload-input").show();
+    
     this.getElement().find(".attachments-image-input-form")[0].reset();
-    this.onEnumerate(JSON.parse(data));
+    this.onEnumerate(JSON.parse(data));    
   };
+
 
   AttachmentEditor.prototype.onUpload = function () {
     var that = this;
@@ -109,6 +114,9 @@
 
     if (!files.length)
       return;
+    
+    this.getElement().find(".attachments-upload-progress").show();
+    this.getElement().find(".attachments-upload-input").hide();
 
     var data = new FormData();
     data.append("file", files[0]);
@@ -125,6 +133,10 @@
     })
       .done(function (data) { that.onUploaded(data); })
       .fail(function (jqxhr, textStatus, error) {
+
+        this.getElement().find(".attachments-upload-progress").hide();
+        this.getElement().find(".attachments-upload-input").show();
+
         alert(jqxhr.responseText);
       });
   };
@@ -133,7 +145,7 @@
     var that = this;
 
     var elm = $("#tplAttachmentItemAction").children().first().clone();
-    elm.click(function () { that.onDelete(name); });    
+    elm.click(function () { that.onDelete(name); });
 
     parent.find(".att-item-action").append(elm);
   };

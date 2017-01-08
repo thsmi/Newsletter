@@ -20,7 +20,7 @@
     $.post(actionURL, { action: "settings.paths.get" }, null, "json")
       .done(function (data) { onPathsSettingsLoaded(data); })
       .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
+        alert(jqxhr.responseText);
       });
   }
 
@@ -38,7 +38,7 @@
     $.post(actionURL, { action: "settings.mail.get", subject: "Unnamed" }, null, "json")
       .done(function (data) { onMailSettingsLoaded(data); })
       .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
+        alert(jqxhr.responseText);
       });
   }
 
@@ -56,7 +56,7 @@
     $.post(actionURL, request, null, "json")
       .done(function (data) { })
       .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
+        alert(jqxhr.responseText);
       });
   }
 
@@ -86,7 +86,7 @@
     $.post(actionURL, { action: "settings.server.get" }, null, "json")
       .done(function (data) { onServerSettingsLoaded(data); })
       .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
+        alert(jqxhr.responseText);
       });
   }
 
@@ -104,7 +104,7 @@
     $.post(actionURL, request, null, "json")
       .done(function (data) { })
       .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
+        alert(jqxhr.responseText);
       });
   }
 
@@ -123,7 +123,7 @@
       saveServerSmtpSettings();
        })
       .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
+        alert(jqxhr.responseText);
       });
 
   }
@@ -143,7 +143,7 @@
     $.post(actionURL, { action: "settings.server.smtp.get" }, null, "json")
       .done(function (data) { onServerSmtpSettingsLoaded(data); })
       .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
+        alert(jqxhr.responseText);
       });
   }
 
@@ -156,7 +156,7 @@
     $.post(actionURL, { action: "settings.roles.get" }, null, "json")
       .done(function (data) { onRolesLoaded(data); })
       .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
+        alert(jqxhr.responseText);
       });    
 
   }
@@ -171,7 +171,7 @@
     $.post(actionURL, request, null, "json")
       .done(function (data) { })
       .fail(function (jqxhr, textStatus, error) {
-        alert(textStatus);
+        alert(jqxhr.responseText);
       });
 
   }
