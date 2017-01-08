@@ -9,24 +9,27 @@ And navigate to the location in your webbrowser.
 All important preferences can be accessed from the UI.
 So open up your browser and select the settings tab.
 
-Review the directory locations. By default any data will be stored in the data directory. 
+Review the directory locations in the first section. By default any data will be stored in the data directory. 
 You should stick with the default. In case you need to adjust these directories, 
-modifing the paths.json which is locates in the setting folder beneath the application root directory.
+modifing the paths.json which is located in the setting folder beneath the application root directory.
 The directories should be relative to the applications root.
 
-You should give your newsletter a prefix. This is a common habbit.
-In case you do not want to have a prefix clear the field and save the settings.
+The second section is used to specify the mail. It control the template as well as the sender information.
 
-The set the from and reply to address. 
+We'll skip the template for now. Just stick with the default value. We'll look later in more detail who to customize templates. 
 
-Next step is to configure the mailserver. You have a choice between using sendmail and smtp.
+Give your newsletter a prefix. The prefix is typially encloses in brackets. This is a common habbit and makes filtering mails easier. But in case you do not want to have a prefix, just clear the field.
+
+As next step set the "from" and "reply to" address as well as a human readable alias.
+
+Then configure the mailserver. You have a choice between using sendmail and smtp.
 If you are running in an hosted enviroment, you will be most likely forced to use sendmail.
 SMTP is in general more complex and overhead but faster and more secure than sendmail.
 
 Whatever you descide to use, keep in mind the from and reply to address have to match always the domain's mail exchange server.
-If not you mails will be most likely rated a spam.
+If not your mails will be most likely rated as spam.
 
-We'll skip the roles section for now. We'll look into that in the next section.
+The next settings are about about roles. We'll look into that in the next section.
 
 After the mailserver is configured your are ready to send your first newsletter.
 Just create a new address book and then go to drafts and compose your news.
