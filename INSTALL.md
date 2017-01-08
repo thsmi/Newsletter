@@ -52,7 +52,7 @@ The template is a normal html template file which contains a ${content} placehol
 This tag will replaced with your message when sending mails. 
 
 You can edit can customize the template as you want. But keep in mind web html and mail html are somehow different.
-Most mailer readers can render html, but only few support modern features introduces in html5. So be minimalistic and konservative.
+Most mailer readers can render html, but only few support modern features introduces in html5. So be minimalistic and konservative. You can find a good summary here at [mailchimps](http://kb.mailchimp.com/campaigns/design/limitations-of-html-email#Email-HTML-v.-Web-HTML)
 
 Images which are located in the template directory are automatically embedded into the mail. All other src links are untouched.
 
