@@ -49,7 +49,7 @@
 </div>
 
 <div id="tplAttachmentItemAction">
-  <a href="#" class="btn btn-default att-item-delete" role="button">Delete</a>
+  <a class="btn btn-default att-item-delete" role="button">Delete</a>
 </div>
 
 <div id="tplAttachmentItem">
