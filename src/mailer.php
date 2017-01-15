@@ -3,7 +3,7 @@
 require ("./php/newsletter/config.php");
 require_once("php/newsletter/settings/settings.php");
 require_once("php/newsletter/security/principal.php");
-require ("./php/newsletter/logic.php");
+require_once("./php/newsletter/logic.php");
 
 require ("./php/phpmailer/PHPMailerAutoload.php");
 
@@ -81,9 +81,9 @@ function doAddressBook($action, $request) {
     if ($action === "enumerate")
         return doAddressBookList();
     
-   if (Principal::canEdit("addressbook") === false) 
-     throw new Exception("Insuficient permissions to change addressbooks");
-   
+    if (Principal::canEdit("addressbook") === false)
+        throw new Exception("Insuficient permissions to change addressbooks");
+    
     if ($action === "new")
         return doAddressBookNew($request["name"]);
     
@@ -103,9 +103,9 @@ function doAddressBook($action, $request) {
 }
 
 function doSettings($action, $request) {
-
+    
     if (Principal::canEdit("settings") === false)
-      throw new Exception("Insuficient permissions to view and change settings");
+        throw new Exception("Insuficient permissions to view and change settings");
     
     if($action === "paths.get") {
         
@@ -132,10 +132,22 @@ function doSettings($action, $request) {
     }
     
     if($action === "mail.set") {
+        
+        $template = Settings::getProperty("paths.templates").$request["template"];
+        if (file_exists($template)=== false)
+            throw new Exception("Invalid template, no such file");
+        
+        if (filter_var($request["from"], FILTER_VALIDATE_EMAIL) === false)
+            throw new Exception("From is not a valid mail address");
+        
+        
+        if (filter_var($request["replyto"], FILTER_VALIDATE_EMAIL) === false)
+            throw new Exception("Reply-to is not a vaild mail address");
+        
         Settings::setProperty("mail.template", $request["template"]);
         Settings::setProperty("mail.prefix", $request["prefix"]);
         Settings::setProperty("mail.from", $request["from"]);
-        Settings::setProperty("mail.replyto", $request["replyto"]);        
+        Settings::setProperty("mail.replyto", $request["replyto"]);
         Settings::setProperty("mail.sender", $request["sender"]);
         
         return [];
@@ -171,8 +183,8 @@ function doSettings($action, $request) {
         Settings::setProperty("server.smtp.port", $request["port"]);
         Settings::setProperty("server.smtp.security", $request["security"]);
         Settings::setProperty("server.smtp.authentication", $request["authentication"]);
-
-        Settings::setProperty("server.smtp.username", encrypt($request["username"]));        
+        
+        Settings::setProperty("server.smtp.username", encrypt($request["username"]));
         Settings::setProperty("server.smtp.password", encrypt($request["password"]));
         return [];
     }
@@ -181,14 +193,14 @@ function doSettings($action, $request) {
         return [
         "settings" => Settings::getProperty("roles.settings"),
         "addressbook" => Settings::getProperty("roles.addressbook")
-        ];            
+        ];
     }
-
+    
     if($action === "roles.set") {
         Settings::setProperty("roles.settings", $request["settings"]);
         Settings::setProperty("roles.addressbook", $request["addressbook"]);
-        return[];   
-    }        
+        return[];
+    }
     
     throw new Exception ("Unknown action $action");
 }
