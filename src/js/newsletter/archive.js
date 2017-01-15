@@ -138,7 +138,9 @@
       .html(data.message)
       .click(function () { that.showTeaser(); });
 
-    elm.find(".msg-archive-attachments").click(function () { (new AttachmentViewer(that.id)).show(); });
+    elm.find(".msg-archive-attachments").click(function () { that.showAttachments(); });
+
+    elm.find(".msg-archive-preview").click(function () { that.preview(); });
 
     $("#" + this.id).append(elm);
 
@@ -146,6 +148,14 @@
     elm.find(".dropdown").on('show.bs.dropdown', function () { that.populateSend(); });
 
     //msg-list-details
+  };
+
+  ArchiveItem.prototype.showAttachments = function () {
+    (new AttachmentViewer(this.id)).show();
+  };
+
+  ArchiveItem.prototype.preview = function () {
+    (new MessagePreviewer(this.id, "archive")).show();
   };
 
   ArchiveItem.prototype.showTeaser = function () {

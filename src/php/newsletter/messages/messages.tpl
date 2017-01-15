@@ -39,17 +39,16 @@
 <div class="msg-editor-summernote"></div>
 
 <div style="text-align: right">
-<button type="button" class="btn msg-editor-attachments">Attachments</button>
-&emsp;
-<button type="button" class="btn msg-editor-preview">Preview</button>
-&emsp;
+<button type="button" class="btn msg-editor-attachments">Attachments</button> &emsp;
+<button type="button" class="btn msg-editor-preview">Preview</button> &emsp;
 <button type="button" class="btn msg-editor-delete">Delete</button>
 <button type="button" class="btn msg-editor-save">Save</button>
+
 <div class="dropdown msg-editor-send dropup" style="display: inline">
-<button class="btn btn-success dropdown-toggle " type="button" data-toggle="dropdown">Send
+<button class="btn btn-success dropdown-toggle " type="button" data-toggle="dropdown">
+  Send
   <span class="caret"></span></button>
-<ul class="dropdown-menu">
-</ul>
+<ul class="dropdown-menu"></ul>
 </div>
 </div>
 </div>
@@ -60,14 +59,18 @@
   <div class="panel-body msg-list-details">
     <div class="msg-list-details-msg">
     </div>
+
     <div style="text-align: right">
 
+<button type="button" class="btn msg-archive-attachments">Attachments</button> &emsp;
+<button type="button" class="btn msg-archive-preview">Preview</button> &emsp;
+
 <div class="dropdown msg-archive-send dropup" style="display: inline">
-<button type="button" class="btn msg-archive-attachments">Attachments</button>
-<button class="btn btn-success dropdown-toggle " type="button" data-toggle="dropdown">Send again
-  <span class="caret"></span></button>
-<ul class="dropdown-menu">
-</ul>
+<button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+  Send again
+  <span class="caret"></span>
+ </button>
+<ul class="dropdown-menu"></ul>
 </div>
 </div>
 </div>

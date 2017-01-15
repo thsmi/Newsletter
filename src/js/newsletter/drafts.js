@@ -269,7 +269,7 @@
   };
 
   DraftItem.prototype.preview = function () {
-    window.open("preview.php?id=" + this.id);
+    (new MessagePreviewer(this.id, "draft")).show();
   };
 
   DraftItem.prototype.showAttachments = function () {

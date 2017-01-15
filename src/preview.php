@@ -7,7 +7,18 @@ require_once("php/newsletter/mail/mail.php");
 
 
 function doRequest($request) {
-    $item = (new Drafts())->load($request["id"]);
+    
+    $item = null;
+
+    $type = strtolower($request["type"]);
+    $id = $request["id"];
+    
+    if ($type === "draft")
+        $item = (new Drafts())->load($id);
+    else if ($type === "archive")
+        $item = (new Archive())->load($id);
+    else
+        throw new Exception("Invalid preview type ".$type);
     
     $template = Settings::getProperty("paths.templates").Settings::getProperty("mail.template");
     $dir = pathinfo($template ,PATHINFO_DIRNAME);
