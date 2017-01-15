@@ -21,18 +21,18 @@ require_once("php/newsletter/security/principal.php");
     <link href="./js/newsletter/newsletter.css" rel="stylesheet">
 
     <script src="./js/newsletter/attachments.js"></script>
-    
+
     <script src="./js/newsletter/messages.js"></script>
     <script src="./js/newsletter/drafts.js"></script>
     <script src="./js/newsletter/archive.js"></script>
 
     <?php if (Principal::canEdit("addressbook")) { ?>
-    <script src="./js/newsletter/addressbook.js"></script>    
-    <?php } ?>
+      <script src="./js/newsletter/addressbook.js"></script>
+      <?php } ?>
 
-    <?php if (Principal::canEdit("settings")) { ?>
-    <script src="./js/newsletter/settings.js"></script>
-    <?php } ?>
+        <?php if (Principal::canEdit("settings")) { ?>
+          <script src="./js/newsletter/settings.js"></script>
+          <?php } ?>
   </head>
 
   <body style="background-color: #fafafa;">
@@ -41,8 +41,8 @@ require_once("php/newsletter/security/principal.php");
 
 
       <?php require("php/newsletter/attachments/attachments.tpl"); ?>
-          <?php require("php/newsletter/messages/messages.tpl") ?>
-            <?php require("php/newsletter/addressbook/addressbook.tpl") ?>
+        <?php require("php/newsletter/messages/messages.tpl") ?>
+          <?php require("php/newsletter/addressbook/addressbook.tpl") ?>
     </div>
 
     <div id="divAttachments"></div>
@@ -132,6 +132,9 @@ require_once("php/newsletter/security/principal.php");
           }
 
           function enumerateAddresses() {
+            if (typeof(AddressBook) === "undefined")
+              return;
+
             (new AddressBook("#divAddresses")).enumerate();
           }
 
