@@ -57,7 +57,7 @@
   <div class="form-group">
     <label for="newsletter-settings-sender" class="control-label col-sm-2">Sender</label>
     <div class="col-sm-9">
-      <input class="form-control" type="email" id="newsletter-settings-sender">
+      <input class="form-control" type="text" id="newsletter-settings-sender">
     </div>
   </div>
   
