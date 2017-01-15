@@ -4,7 +4,75 @@
 
   var actionURL = "mailer.php";
 
-  function onPathsSettingsLoaded(data) {
+  function AbstractSettings() {
+  }
+
+  AbstractSettings.prototype.getLoadAction = function () {
+  };
+
+  AbstractSettings.prototype.getSaveAction = function () {
+  };
+
+  AbstractSettings.prototype.init = function () {
+    this.load();
+    return this;
+  };
+
+  AbstractSettings.prototype.load = function () {
+    var that = this;
+    this.send(this.onLoad(), function (data) { that.onLoaded(data); });
+
+    return this;
+  };
+
+  AbstractSettings.prototype.onLoad = function () {
+    return { action: loadAction };
+  };
+
+  AbstractSettings.prototype.onLoaded = function (data) {
+  };
+
+  AbstractSettings.prototype.save = function () {
+    var that = this;
+    this.send(this.onSave(), function (data) { that.onSaved(data); });
+
+    return this;
+  };
+
+  AbstractSettings.prototype.send = function (request, callback) {
+
+    if (request === null || typeof (request) === "undefined")
+      return;
+
+    if (!("action" in request))
+      return;
+
+    $.post(actionURL, request, null, "json")
+      .done(callback)
+      .fail(function (jqxhr, textStatus, error) {
+        alert(jqxhr.responseText);
+      });
+
+    return this;
+  };
+
+  AbstractSettings.prototype.onSave = function () {
+  };
+
+  AbstractSettings.prototype.onSaved = function (data) {
+  };
+
+  function PathSettings() {
+  }
+
+  PathSettings.prototype = Object.create(AbstractSettings.prototype);
+  PathSettings.prototype.constructor = PathSettings;
+
+  PathSettings.prototype.onLoad = function () {
+    return { action: "settings.paths.get" };
+  };
+
+  PathSettings.prototype.onLoaded = function (data) {
     $("#newsletter-settings-archive").text(data.archive);
     $("#newsletter-settings-drafts").text(data.drafts);
     $("#newsletter-settings-addressbook").text(data.addressbook);
@@ -13,54 +81,106 @@
     $("#newsletter-settings-archive-real").text(data["archive.real"]);
     $("#newsletter-settings-drafts-real").text(data["drafts.real"]);
     $("#newsletter-settings-addressbook-real").text(data["addressbook.real"]);
-    $("#newsletter-settings-templates-real").text(data["templates.real"]);    
+    $("#newsletter-settings-templates-real").text(data["templates.real"]);
+  };
+
+
+  function MailSettings() {
   }
 
-  function loadPathsSettings() {
-    $.post(actionURL, { action: "settings.paths.get" }, null, "json")
-      .done(function (data) { onPathsSettingsLoaded(data); })
-      .fail(function (jqxhr, textStatus, error) {
-        alert(jqxhr.responseText);
-      });
-  }
+  MailSettings.prototype = Object.create(AbstractSettings.prototype);
+  MailSettings.prototype.constructor = MailSettings;
 
-  function onMailSettingsLoaded(data) {
+  MailSettings.prototype.init = function () {
+    var that = this;
+
+    $("#newsletter-settings-mail-reset").click(function () {
+      that.load();
+    });
+
+    $("#newsletter-settings-mail-save").click(function () {
+      that.save();
+    });
+
+    this.load();
+    return this;
+  };
+
+  MailSettings.prototype.onLoad = function () {
+    return { action: "settings.mail.get" };
+  };
+
+  MailSettings.prototype.onLoaded = function (data) {
     $("#newsletter-settings-template").val(data.template);
     $("#newsletter-settings-prefix").val(data.prefix);
     $("#newsletter-settings-from").val(data.from);
     $("#newsletter-settings-replyto").val(data.replyto);
     $("#newsletter-settings-sender").val(data.sender);
-  }
+  };
 
-
-
-  function loadMailSettings() {
-    $.post(actionURL, { action: "settings.mail.get", subject: "Unnamed" }, null, "json")
-      .done(function (data) { onMailSettingsLoaded(data); })
-      .fail(function (jqxhr, textStatus, error) {
-        alert(jqxhr.responseText);
-      });
-  }
-
-  function saveMailSettings() {
-
-    var request = {
+  MailSettings.prototype.onSave = function () {
+    return {
       action: "settings.mail.set",
       template: $("#newsletter-settings-template").val(),
       prefix: $("#newsletter-settings-prefix").val(),
       from: $("#newsletter-settings-from").val(),
       replyto: $("#newsletter-settings-replyto").val(),
-      sender : $("#newsletter-settings-sender").val()
+      sender: $("#newsletter-settings-sender").val()
     };
+  };
 
-    $.post(actionURL, request, null, "json")
-      .done(function (data) { })
-      .fail(function (jqxhr, textStatus, error) {
-        alert(jqxhr.responseText);
-      });
+
+
+  function ServerSettings(id) {
   }
 
-  function onServerTypeChange() {
+  ServerSettings.prototype = Object.create(AbstractSettings.prototype);
+  ServerSettings.prototype.constructor = ServerSettings;
+
+  ServerSettings.prototype.init = function () {
+    var that = this;
+
+    (new SmtpSettings(/*this.id+"-smtp"*/)).init();
+
+    $("#newsletter-settings-server-type-sendmail").click(function () {
+      $("#newsletter-settings-server-type").text("Sendmail");
+      that.onServerTypeChange();
+    });
+
+    $("#newsletter-settings-server-type-smtp").click(function () {
+      $("#newsletter-settings-server-type").text("SMTP");
+      that.onServerTypeChange();
+    });
+
+    this.load();
+    return this;
+  };
+
+  ServerSettings.prototype.onLoad = function () {
+    return { action: "settings.server.get" };
+  };
+
+  ServerSettings.prototype.onLoaded = function (data) {
+    //$("#newsletter-settings-server-timeout").val(data["server.type"]);
+    $("#newsletter-settings-server-type").text(data["server.type"]);
+    this.onServerTypeChange();
+  };
+
+  ServerSettings.prototype.onSave = function () {
+    var value = $("#newsletter-settings-server-type").text().toLowerCase();
+
+    var request = {
+      "action": "settings.server.set",
+      "type": value
+    };
+  };
+
+  ServerSettings.prototype.onSaved = function (data) {
+    if (value === "smtp")
+      (new SmtpSettings()).save();
+  };
+
+  ServerSettings.prototype.onServerTypeChange = function () {
     var value = $("#newsletter-settings-server-type").text().toLowerCase();
 
     if (value === "sendmail") {
@@ -69,129 +189,19 @@
 
     if (value === "smtp") {
       $("#newsletter-settings-server-smtp").show();
-      loadServerSmtpSettings();
+      (new SmtpSettings()).load();
     }
+  };
+
+
+  function SmtpSettings(id) {
   }
 
+  SmtpSettings.prototype = Object.create(AbstractSettings.prototype);
+  SmtpSettings.prototype.constructor = SmtpSettings;
 
-  function onServerSettingsLoaded(data) {
-    $("#newsletter-settings-server-type").text(data["server.type"]);
-    //$("#newsletter-settings-server-timeout").val(data["server.type"]);
-
-    onServerTypeChange();
-  }
-
-  function loadServerSettings() {
-
-    $.post(actionURL, { action: "settings.server.get" }, null, "json")
-      .done(function (data) { onServerSettingsLoaded(data); })
-      .fail(function (jqxhr, textStatus, error) {
-        alert(jqxhr.responseText);
-      });
-  }
-
-  function saveServerSmtpSettings() {
-    var request = {
-      "action": "settings.server.smtp.set",
-      "host": $("#newsletter-settings-server-smtp-host").val(),
-      "port": $("#newsletter-settings-server-smtp-port").val(),
-      "security": $("#newsletter-settings-server-smtp-security-type").text(),
-      "authentication": $("#newsletter-settings-server-smtp-authentication-type").text(),
-            "username": $("#newsletter-settings-server-smtp-username").val(),
-      "password": $("#newsletter-settings-server-smtp-password").val(),            
-    };
-
-    $.post(actionURL, request, null, "json")
-      .done(function (data) { })
-      .fail(function (jqxhr, textStatus, error) {
-        alert(jqxhr.responseText);
-      });
-  }
-
-  function saveServerSettings() {
-
-    var value = $("#newsletter-settings-server-type").text().toLowerCase();
-
-    var request = {
-      "action": "settings.server.set",
-      "type": value
-    };
-
-    $.post(actionURL, request, null, "json")
-      .done(function (data) {
-    if (value === "smtp")
-      saveServerSmtpSettings();
-       })
-      .fail(function (jqxhr, textStatus, error) {
-        alert(jqxhr.responseText);
-      });
-
-  }
-
-  function onServerSmtpSettingsLoaded(data) {
-
-    $("#newsletter-settings-server-smtp-host").val(data.host);
-    $("#newsletter-settings-server-smtp-port").val(data.port);
-    $("#newsletter-settings-server-smtp-security-type").text(data.security);
-    $("#newsletter-settings-server-smtp-authentication-type").text(data.authentication);
-    $("#newsletter-settings-server-smtp-username").val(data.username);
-    $("#newsletter-settings-server-smtp-password").val(data.password);
-  }
-
-  function loadServerSmtpSettings() {
-
-    $.post(actionURL, { action: "settings.server.smtp.get" }, null, "json")
-      .done(function (data) { onServerSmtpSettingsLoaded(data); })
-      .fail(function (jqxhr, textStatus, error) {
-        alert(jqxhr.responseText);
-      });
-  }
-
-  function onRolesLoaded(data) {
-    $("#newsletter-settings-roles-settings").val(data.settings);
-    $("#newsletter-settings-roles-addressbook").val(data.addressbook);
-  }
-
-  function loadRolesSettings() {
-    $.post(actionURL, { action: "settings.roles.get" }, null, "json")
-      .done(function (data) { onRolesLoaded(data); })
-      .fail(function (jqxhr, textStatus, error) {
-        alert(jqxhr.responseText);
-      });    
-
-  }
-
-  function saveRolesSettings() {
-    var request = {
-      "action": "settings.roles.set",
-      "settings": $("#newsletter-settings-roles-settings").val(),
-      "addressbook": $("#newsletter-settings-roles-addressbook").val()
-    };
-
-    $.post(actionURL, request, null, "json")
-      .done(function (data) { })
-      .fail(function (jqxhr, textStatus, error) {
-        alert(jqxhr.responseText);
-      });
-
-  }
-
-  $(document).ready(function () {
-    loadPathsSettings();
-    loadMailSettings();
-    loadServerSettings();
-    loadRolesSettings();
-
-    $("#newsletter-settings-server-type-sendmail").click(function () {
-      $("#newsletter-settings-server-type").text("Sendmail");
-      onServerTypeChange();
-    });
-
-    $("#newsletter-settings-server-type-smtp").click(function () {
-      $("#newsletter-settings-server-type").text("SMTP");
-      onServerTypeChange();
-    });
-
+  SmtpSettings.prototype.init = function () {
+    var that = this;
 
     $("#newsletter-settings-server-smtp-security-type-none").click(function () {
       $("#newsletter-settings-server-smtp-security-type").text("");
@@ -214,29 +224,95 @@
       $("#newsletter-settings-server-smtp-authentication-type").text("false");
     });
 
-    $("#newsletter-settings-mail-reset").click(function () {
-      loadMailSettings();
-    });
-
-    $("#newsletter-settings-mail-save").click(function () {
-      saveMailSettings();
-    });
 
     $("#newsletter-settings-server-reset").click(function () {
-      loadServerSettings();
+      that.load();
     });
 
     $("#newsletter-settings-server-save").click(function () {
-      saveServerSettings();
+      that.save();
     });
 
+    this.load();
+    return this;
+  };
+
+  SmtpSettings.prototype.onSave = function () {
+    return {
+      "action": "settings.server.smtp.set",
+      "host": $("#newsletter-settings-server-smtp-host").val(),
+      "port": $("#newsletter-settings-server-smtp-port").val(),
+      "security": $("#newsletter-settings-server-smtp-security-type").text(),
+      "authentication": $("#newsletter-settings-server-smtp-authentication-type").text(),
+      "username": $("#newsletter-settings-server-smtp-username").val(),
+      "password": $("#newsletter-settings-server-smtp-password").val(),
+    };
+  };
+
+  SmtpSettings.prototype.onLoad = function () {
+    return { action: "settings.server.smtp.get" };
+  };
+
+  SmtpSettings.prototype.onLoaded = function (data) {
+    $("#newsletter-settings-server-smtp-host").val(data.host);
+    $("#newsletter-settings-server-smtp-port").val(data.port);
+    $("#newsletter-settings-server-smtp-security-type").text(data.security);
+    $("#newsletter-settings-server-smtp-authentication-type").text(data.authentication);
+    $("#newsletter-settings-server-smtp-username").val(data.username);
+    $("#newsletter-settings-server-smtp-password").val(data.password);
+  };
+
+  function RoleSettings(id) {
+  }
+
+  RoleSettings.prototype = Object.create(AbstractSettings.prototype);
+  RoleSettings.prototype.constructor = RoleSettings;
+
+  RoleSettings.prototype.init = function () {
+    var that = this;
+
     $("#newsletter-settings-roles-reset").click(function () {
-      loadRolesSettings();
+      that.load();
     });
 
     $("#newsletter-settings-roles-save").click(function () {
-      saveRolesSettings();
-    });    
+      that.save();
+    });
+
+    this.load();
+    return this;
+  };
+
+  RoleSettings.prototype.onLoad = function(data) {
+    return { action: "settings.roles.get" };
+  };
+
+  RoleSettings.prototype.onLoaded = function(data) {
+    $("#newsletter-settings-roles-settings").val(data.settings);
+    $("#newsletter-settings-roles-addressbook").val(data.addressbook);
+  };
+
+  RoleSettings.prototype.onSave = function(data) {
+    return {
+      "action": "settings.roles.set",
+      "settings": $("#newsletter-settings-roles-settings").val(),
+      "addressbook": $("#newsletter-settings-roles-addressbook").val()
+    };
+  };
+
+
+  $(document).ready(function () {
+
+    (new PathSettings("newsletter-paths"))
+      .init();
+    (new MailSettings("newsletter-mail"))
+      .init();
+
+    (new ServerSettings("newsletter-server"))
+      .init();
+
+    (new RoleSettings("newsletter-roles"))
+      .init();
 
   });
 })(window);
