@@ -21,10 +21,18 @@ require_once("php/newsletter/security/principal.php");
     <link href="./js/newsletter/newsletter.css" rel="stylesheet">
 
     <script src="./js/newsletter/attachments.js"></script>
+    
     <script src="./js/newsletter/messages.js"></script>
+    <script src="./js/newsletter/drafts.js"></script>
+    <script src="./js/newsletter/archive.js"></script>
+
+    <?php if (Principal::canEdit("addressbook")) { ?>
+    <script src="./js/newsletter/addressbook.js"></script>    
+    <?php } ?>
+
     <?php if (Principal::canEdit("settings")) { ?>
-      <script src="./js/newsletter/settings.js"></script>
-      <?php } ?>
+    <script src="./js/newsletter/settings.js"></script>
+    <?php } ?>
   </head>
 
   <body style="background-color: #fafafa;">
