@@ -4,6 +4,8 @@
 
   var actionURL = "mailer.php";
 
+  /* global $ */
+
   function AttachmentViewer(id) {
     this.id = id;
     this.template = "tplAttachments";
@@ -42,16 +44,16 @@
 
     $.post(actionURL, { action: "" + this.type + ".attachments.enumerate", id: this.id }, null, "json")
       .done(function (data) { that.onEnumerate(data); })
-      .fail(function (jqxhr, textStatus, error) {
+      .fail(function (jqxhr/*, textStatus, error*/) {
         alert(jqxhr.responseText);
       });
     return this;
   };
 
-  AttachmentViewer.prototype.onInitItem = function (elm, name) {
+  AttachmentViewer.prototype.onInitItem = function (/*elm, name*/) {
   };
 
-  AttachmentViewer.prototype.onInit = function (elm) {
+  AttachmentViewer.prototype.onInit = function (/*elm*/) {
   };
 
   AttachmentViewer.prototype.show = function () {
@@ -93,7 +95,7 @@
 
     $.post(actionURL, { action: "drafts.attachments.delete", id: this.id, attachment: name }, null, "json")
       .done(function (data) { that.onEnumerate(data); })
-      .fail(function (jqxhr, textStatus, error) {
+      .fail(function (jqxhr/*, textStatus, error*/) {
         alert(jqxhr.responseText);
       });
   };
@@ -132,7 +134,7 @@
       processData: false
     })
       .done(function (data) { that.onUploaded(data); })
-      .fail(function (jqxhr, textStatus, error) {
+      .fail(function (jqxhr/*, textStatus, error*/) {
 
         this.getElement().find(".attachments-upload-progress").hide();
         this.getElement().find(".attachments-upload-input").show();

@@ -2,6 +2,8 @@
 
   "use strict";
 
+  /* global $ */
+
   function MessagePreviewer(id, type) {
     this.id = id;
     this.type = type;

@@ -4,6 +4,10 @@
 
   var actionURL = "mailer.php";
 
+  /* global $ */
+  /* global AbstractListItem */
+  /* global MessagePreviewer */
+  /* global AttachmentViewer */
 
   function Archive(id) {
     this.id = id;
@@ -29,7 +33,7 @@
     var that = this;
     $.post(actionURL, { action: "archive.enumerate" }, null, "json")
       .done(function (data) { that.onEnumerate(data); })
-      .fail(function (jqxhr, textStatus, error) {
+      .fail(function (jqxhr /*, textStatus, error*/) {
         alert(jqxhr.responseText);
       });
   };
@@ -111,7 +115,7 @@
 
   };
 
-  ArchiveItem.prototype.onSend = function (data) {
+  ArchiveItem.prototype.onSend = function (/*data*/) {
   };
 
   ArchiveItem.prototype.send = function (addresses) {

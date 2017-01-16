@@ -1,8 +1,10 @@
-(function (exports) {
+(function (/*exports*/) {
 
   "use strict";
 
   var actionURL = "mailer.php";
+
+  /* global $ */  
 
   function AbstractSettings() {
   }
@@ -26,10 +28,10 @@
   };
 
   AbstractSettings.prototype.onLoad = function () {
-    return { action: loadAction };
+    return undefined;
   };
 
-  AbstractSettings.prototype.onLoaded = function (data) {
+  AbstractSettings.prototype.onLoaded = function (/*data*/) {
   };
 
   AbstractSettings.prototype.save = function () {
@@ -49,7 +51,7 @@
 
     $.post(actionURL, request, null, "json")
       .done(callback)
-      .fail(function (jqxhr, textStatus, error) {
+      .fail(function (jqxhr/*, textStatus, error*/) {
         alert(jqxhr.responseText);
       });
 
@@ -59,7 +61,7 @@
   AbstractSettings.prototype.onSave = function () {
   };
 
-  AbstractSettings.prototype.onSaved = function (data) {
+  AbstractSettings.prototype.onSaved = function (/*data*/) {
   };
 
   function PathSettings() {
@@ -131,7 +133,7 @@
 
 
 
-  function ServerSettings(id) {
+  function ServerSettings(/*id*/) {
   }
 
   ServerSettings.prototype = Object.create(AbstractSettings.prototype);
@@ -169,13 +171,14 @@
   ServerSettings.prototype.onSave = function () {
     var value = $("#newsletter-settings-server-type").text().toLowerCase();
 
-    var request = {
+    return {
       "action": "settings.server.set",
       "type": value
     };
   };
 
-  ServerSettings.prototype.onSaved = function (data) {
+  ServerSettings.prototype.onSaved = function (/*data*/) {
+    var value = $("#newsletter-settings-server-type").text().toLowerCase();   
     if (value === "smtp")
       (new SmtpSettings()).save();
   };
@@ -194,7 +197,7 @@
   };
 
 
-  function SmtpSettings(id) {
+  function SmtpSettings(/*id*/) {
   }
 
   SmtpSettings.prototype = Object.create(AbstractSettings.prototype);
@@ -262,7 +265,7 @@
     $("#newsletter-settings-server-smtp-password").val(data.password);
   };
 
-  function RoleSettings(id) {
+  function RoleSettings(/*id*/) {
   }
 
   RoleSettings.prototype = Object.create(AbstractSettings.prototype);
@@ -283,7 +286,7 @@
     return this;
   };
 
-  RoleSettings.prototype.onLoad = function(data) {
+  RoleSettings.prototype.onLoad = function() {
     return { action: "settings.roles.get" };
   };
 
@@ -292,7 +295,7 @@
     $("#newsletter-settings-roles-addressbook").val(data.addressbook);
   };
 
-  RoleSettings.prototype.onSave = function(data) {
+  RoleSettings.prototype.onSave = function() {
     return {
       "action": "settings.roles.set",
       "settings": $("#newsletter-settings-roles-settings").val(),

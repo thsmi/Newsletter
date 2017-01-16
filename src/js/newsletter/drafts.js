@@ -4,6 +4,11 @@
 
   var actionURL = "mailer.php";
 
+  /* global $ */
+  /* global AbstractListItem */
+  /* global MessagePreviewer */
+  /* global AttachmentEditor */
+
   function Drafts(id) {
     this.id = id;
   }
@@ -25,7 +30,7 @@
 
     $.post(actionURL, { action: "drafts.new", subject: "Unnamed" }, null, "json")
       .done(function (data) { that.onNew(data); })
-      .fail(function (jqxhr, textStatus, error) {
+      .fail(function (jqxhr/*, textStatus, error*/) {
         alert(jqxhr.responseText);
       });
   };
@@ -50,7 +55,7 @@
     var that = this;
     $.post(actionURL, { action: "drafts.enumerate" }, null, "json")
       .done(function (data) { that.onEnumerate(data); })
-      .fail(function (jqxhr, textStatus, error) {
+      .fail(function (jqxhr/*, textStatus, error*/) {
         alert(jqxhr.responseText);
       });
   };
@@ -136,13 +141,13 @@
     $("#" + this.id).remove();
   };
 
-  DraftItem.prototype.delete = function (data) {
+  DraftItem.prototype.delete = function (/*data*/) {
 
     var that = this;
 
     this.sendRequest(
       { action: "drafts.delete", id: this.id },
-      function (data) { that.remove(); });
+      function (/*data*/) { that.remove(); });
   };
 
   DraftItem.prototype.save = function (callback) {
@@ -168,7 +173,7 @@
     this.sendRequest(data, callback);
   };
 
-  DraftItem.prototype.onSend = function (data) {
+  DraftItem.prototype.onSend = function (/*data*/) {
     this.remove();
   };
 
@@ -318,7 +323,7 @@
           .find(".msg-editor-summernote")
           .summernote('insertImage', JSON.parse(data).src);
       })
-      .fail(function (jqxhr, textStatus, error) {
+      .fail(function (jqxhr/*, textStatus, error*/) {
         alert(jqxhr.responseText);
       });
   };

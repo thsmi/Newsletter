@@ -4,6 +4,7 @@
 
   var actionURL = "mailer.php";
 
+  /* global $ */
 
   function AbstractListItem(id, template) {
     this.id = id;
@@ -53,7 +54,7 @@
     var that = this;
     $.post(actionURL, msg, null, "json")
       .done(callback)
-      .fail(function (jqxhr, textStatus, error) { that.onError(jqxhr.responseText); });
+      .fail(function (jqxhr/*, textStatus, error*/) { that.onError(jqxhr.responseText); });
 
   };
 

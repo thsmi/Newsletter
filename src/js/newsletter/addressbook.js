@@ -4,6 +4,9 @@
 
   var actionURL = "mailer.php";
 
+  /* global $ */
+  /* global AbstractListItem */
+
   function AddressBook(id) {
     this.id = id;
   }
@@ -25,7 +28,7 @@
 
     $.post(actionURL, { action: "addresses.new", name: "Unnamed" }, null, "json")
       .done(function (data) { that.onNew(data); })
-      .fail(function (jqxhr, textStatus, error) {
+      .fail(function (jqxhr/*, textStatus, error*/) {
         alert(jqxhr.responseText);
       });
 
@@ -51,7 +54,7 @@
 
     $.post(actionURL, { action: "addresses.enumerate" }, null, "json")
       .done(function (data) { that.onEnumerate(data); })
-      .fail(function (jqxhr, textStatus, error) {
+      .fail(function (jqxhr/*, textStatus, error*/) {
         alert(jqxhr.responseText);
       });
   };
@@ -120,7 +123,7 @@
     this.showTeaser();
   };
 
-  AddressListItem.prototype.onAddressBookDeleted = function (data) {
+  AddressListItem.prototype.onAddressBookDeleted = function (/*data*/) {
     $("#" + this.id).remove();
   };
 
