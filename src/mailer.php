@@ -1,11 +1,11 @@
 <?php
 
-require ("./php/newsletter/config.php");
+require_once("./php/newsletter/config.php");
 require_once("php/newsletter/settings/settings.php");
 require_once("php/newsletter/security/principal.php");
 require_once("./php/newsletter/logic.php");
 
-require ("./php/phpmailer/PHPMailerAutoload.php");
+require_once("./php/phpmailer/PHPMailerAutoload.php");
 
 
 function doDrafts($action, $request) {
