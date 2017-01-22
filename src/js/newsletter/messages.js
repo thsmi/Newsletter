@@ -2,9 +2,8 @@
 
   "use strict";
 
-  var actionURL = "mailer.php";
-
   /* global $ */
+  /* global AjaxPost */
 
   function AbstractListItem(id, template) {
     this.id = id;
@@ -50,14 +49,17 @@
   };
 
   // populate the send button..
-  AbstractListItem.prototype.sendRequest = function (msg, callback) {
+  AbstractListItem.prototype.sendRequest = function (msg, onSuccess, onProgress) {
     var that = this;
-    $.post(actionURL, msg, null, "json")
-      .done(callback)
-      .fail(function (jqxhr/*, textStatus, error*/) { that.onError(jqxhr.responseText); });
 
+    (new AjaxPost())
+      .sendJson(msg)
+      .done(onSuccess)
+      .progress(onProgress)
+      .fail(function (cause) { that.onError(cause); });
   };
+
 
   exports.AbstractListItem = AbstractListItem;
 
-})(window);        
+})(window);

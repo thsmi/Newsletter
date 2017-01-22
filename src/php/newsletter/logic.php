@@ -123,7 +123,7 @@ function doDraftsImagesUpload($id, $files) {
 }
 
 
-function doDraftsSend($id, $addresses) {
+function doDraftsSend($id, $addresses, $callback) {
 
     $draftItem = (new Drafts())->load($id);
 
@@ -132,7 +132,7 @@ function doDraftsSend($id, $addresses) {
     $mail->setMessage($draftItem);    
     $mail->setAddresses((new AddressBook())->load($addresses));    
 
-    $mail->send();
+    $mail->send($callback);
     $mail->archive();
 
     return [];
@@ -155,7 +155,7 @@ function doArchiveLoad($id) {
     ];
 }
 
-function doArchiveSend($id, $addresses) {
+function doArchiveSend($id, $addresses, $callback) {
 
 
     $archiveItem = (new Archive())->load($id);
@@ -165,7 +165,7 @@ function doArchiveSend($id, $addresses) {
     $mail->setMessage($archiveItem);
     $mail->setAddresses((new AddressBook())->load($addresses));    
 
-    $mail->send();
+    $mail->send($callback);
 
     return [];
 }

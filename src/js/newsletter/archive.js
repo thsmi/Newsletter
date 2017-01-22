@@ -2,12 +2,12 @@
 
   "use strict";
 
-  var actionURL = "mailer.php";
-
   /* global $ */
+  /* global AjaxPost */
   /* global AbstractListItem */
   /* global MessagePreviewer */
   /* global AttachmentViewer */
+  /* global ProgressDialog */
 
   function Archive(id) {
     this.id = id;
@@ -31,11 +31,13 @@
 
   Archive.prototype.enumerate = function () {
     var that = this;
-    $.post(actionURL, { action: "archive.enumerate" }, null, "json")
+
+    var action = { action: "archive.enumerate" };
+
+    (new AjaxPost())
+      .sendJson(action)
       .done(function (data) { that.onEnumerate(data); })
-      .fail(function (jqxhr /*, textStatus, error*/) {
-        alert(jqxhr.responseText);
-      });
+      .fail(function (cause) { alert(cause); });
   };
 
 
@@ -121,9 +123,16 @@
   ArchiveItem.prototype.send = function (addresses) {
     var that = this;
 
-    this.sendRequest(
-      { action: "archive.send", id: that.id, addresses: addresses },
-      function (data) { that.onSend(data); });
+    var dialog = (new ProgressDialog()).show();
+
+    var action = { action: "archive.send", id: that.id, addresses: addresses };
+
+    (new AjaxPost())
+      .sendJson(action)
+      .done(function (data) { dialog.hide(); that.onSend(data); })
+      .progress(function (data) { dialog.update(data.progress, data.total); })
+      .fail(function (cause) { dialog.hide(); that.onError(cause); });
+
   };
 
   ArchiveItem.prototype.onMessageLoaded = function (data) {

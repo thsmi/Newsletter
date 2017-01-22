@@ -20,8 +20,12 @@ require_once("php/newsletter/security/principal.php");
 
     <link href="./js/newsletter/newsletter.css" rel="stylesheet">
 
+    <script src="./js/newsletter/ajax.js"></script>
+
     <script src="./js/newsletter/attachments.js"></script>
     <script src="./js/newsletter/preview.js"></script>
+     <script src="./js/newsletter/progress.js"></script>
+   
 
     <script src="./js/newsletter/messages.js"></script>
     <script src="./js/newsletter/drafts.js"></script>
@@ -46,6 +50,7 @@ require_once("php/newsletter/security/principal.php");
         require("php/newsletter/messages/messages.tpl");
         require("php/newsletter/addressbook/addressbook.tpl");
         require("php/newsletter/preview/preview.tpl");
+        require("php/newsletter/progress/progress.tpl");
       ?>
     </div>
 

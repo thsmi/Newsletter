@@ -2,10 +2,9 @@
 
   "use strict";
 
-  var actionURL = "mailer.php";
-
   /* global $ */
   /* global AbstractListItem */
+  /* global AjaxPost */
 
   function AddressBook(id) {
     this.id = id;
@@ -26,11 +25,12 @@
 
     var that = this;
 
-    $.post(actionURL, { action: "addresses.new", name: "Unnamed" }, null, "json")
+    var action = { action: "addresses.new", name: "Unnamed" };
+
+    (new AjaxPost())
+      .sendJson(action)
       .done(function (data) { that.onNew(data); })
-      .fail(function (jqxhr/*, textStatus, error*/) {
-        alert(jqxhr.responseText);
-      });
+      .fail(function (cause) { alert(cause); });
 
   };
 
@@ -52,15 +52,16 @@
   AddressBook.prototype.enumerate = function () {
     var that = this;
 
-    $.post(actionURL, { action: "addresses.enumerate" }, null, "json")
+    var action = { action: "addresses.enumerate" };
+
+    (new AjaxPost())
+      .sendJson(action)
       .done(function (data) { that.onEnumerate(data); })
-      .fail(function (jqxhr/*, textStatus, error*/) {
-        alert(jqxhr.responseText);
-      });
+      .fail(function (cause) { alert(cause); });
   };
 
 
-  
+
   function AddressListItem(id) {
     AbstractListItem.call(this, id, "#tplAddressItem");
   }

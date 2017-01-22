@@ -8,6 +8,24 @@ require_once("./php/newsletter/logic.php");
 require_once("./php/phpmailer/PHPMailerAutoload.php");
 
 
+function onSendProgress($progress, $total/*, $message*/) {
+    
+    $response = [
+    /*    'message' => $message, */
+    'progress' => $progress,
+    'total' => $total
+    ];
+    
+    $response = json_encode($response);
+    
+    echo "".str_pad("".strlen($response), 10, "0", STR_PAD_LEFT);
+    echo ":";
+    echo $response;
+    
+    ob_flush();
+    flush();
+};
+
 function doDrafts($action, $request) {
     
     $dir = Settings::getProperty("paths.drafts");
@@ -33,7 +51,7 @@ function doDrafts($action, $request) {
         return doDraftsSave($id, $request["subject"], $request["message"]);
     
     if ($action === "send")
-        return doDraftsSend($id, $request["addresses"]);
+        return doDraftsSend($id, $request["addresses"], "onSendProgress");
     
     
     if ($action === "attachments.enumerate")
@@ -50,7 +68,7 @@ function doDrafts($action, $request) {
         return doDraftsImagesUpload($id, $_FILES["file"]);
     
     
-    throw new Excpetion ("Unkonw action $action");
+    throw new Excpetion ("Unknown action $action");
 }
 
 function doArchive($action, $request) {
@@ -67,13 +85,13 @@ function doArchive($action, $request) {
         return doArchiveLoad($id);
     
     if ($action === "send")
-        return doArchiveSend($id, $request["addresses"]);
+        return doArchiveSend($id, $request["addresses"], "onSendProgress");
     
     
     if ($action === "attachments.enumerate")
         return doArchiveAttachmentsEnumerate($id);
     
-    throw new Excpetion ("Unkonw action $action");
+    throw new Exception ("Unknown action $action");
 }
 
 function doAddressBook($action, $request) {
@@ -99,7 +117,7 @@ function doAddressBook($action, $request) {
     if ($action === "save")
         return doAddressBookSave($id, $request["name"], $request["addresses"]);
     
-    throw new Excpetion ("Unkonw action $action");
+    throw new Excpetion ("Unknown action $action");
 }
 
 function doSettings($action, $request) {
@@ -107,7 +125,7 @@ function doSettings($action, $request) {
     if (Principal::canEdit("settings") === false)
         throw new Exception("Insuficient permissions to view and change settings");
     
-    if($action === "paths.get") {
+    if ($action === "paths.get") {
         
         return [
         "archive" => Settings::getProperty("paths.archive"),
@@ -121,7 +139,7 @@ function doSettings($action, $request) {
         ];
     }
     
-    if($action === "mail.get") {
+    if ($action === "mail.get") {
         return [
         "template" =>Settings::getProperty("mail.template"),
         "prefix" => Settings::getProperty("mail.prefix"),
@@ -131,11 +149,14 @@ function doSettings($action, $request) {
         ];
     }
     
-    if($action === "mail.set") {
+    if ($action === "mail.set") {
         
-        $template = Settings::getProperty("paths.templates").$request["template"];
-        if (file_exists($template)=== false)
-            throw new Exception("Invalid template, no such file");
+        $template = $request["template"];
+        if (trim($template) === "")
+            throw new Exception("Invalid template, no file specified");
+        
+        if (file_exists(Settings::getProperty("paths.templates").$template)=== false)
+            throw new Exception("Invalid template, no such file ".$template);
         
         if (filter_var($request["from"], FILTER_VALIDATE_EMAIL) === false)
             throw new Exception("From is not a valid mail address");
@@ -144,7 +165,7 @@ function doSettings($action, $request) {
         if (filter_var($request["replyto"], FILTER_VALIDATE_EMAIL) === false)
             throw new Exception("Reply-to is not a vaild mail address");
         
-        Settings::setProperty("mail.template", $request["template"]);
+        Settings::setProperty("mail.template", $template);
         Settings::setProperty("mail.prefix", $request["prefix"]);
         Settings::setProperty("mail.from", $request["from"]);
         Settings::setProperty("mail.replyto", $request["replyto"]);
@@ -160,7 +181,7 @@ function doSettings($action, $request) {
         ];
     }
     
-    if($action === "server.set") {
+    if ($action === "server.set") {
         //Settings::setProperty("server.timeout", $request["timeout"]);
         Settings::setProperty("server.type", $request["type"]);
         return [];
@@ -178,7 +199,7 @@ function doSettings($action, $request) {
         ];
     }
     
-    if($action === "server.smtp.set") {
+    if ($action === "server.smtp.set") {
         Settings::setProperty("server.smtp.host", $request["host"]);
         Settings::setProperty("server.smtp.port", $request["port"]);
         Settings::setProperty("server.smtp.security", $request["security"]);
@@ -189,14 +210,14 @@ function doSettings($action, $request) {
         return [];
     }
     
-    if($action === "roles.get") {
+    if ($action === "roles.get") {
         return [
         "settings" => Settings::getProperty("roles.settings"),
         "addressbook" => Settings::getProperty("roles.addressbook")
         ];
     }
     
-    if($action === "roles.set") {
+    if ($action === "roles.set") {
         Settings::setProperty("roles.settings", $request["settings"]);
         Settings::setProperty("roles.addressbook", $request["addressbook"]);
         return[];
@@ -207,28 +228,33 @@ function doSettings($action, $request) {
 
 function doRequest($request) {
     
-    if (!isset($_REQUEST['action'])) {
+    // In case the request is form encoed we have an action element
+    if (!isset($request['action'])) {
+        // it is obviously not form encoded, so we try to parse it as json
+        $request = json_decode(file_get_contents("php://input"), true);
+    }
+    
+    if (!isset($request['action'])) {
         throw new Exception("Unknown Request");
     }
     
-    $action = $_REQUEST['action'];
-    
+    $action = $request['action'];
     $action = explode(".", $action, 2);
     
     if ($action[0] === "drafts") {
-        return doDrafts($action[1],$_REQUEST);
+        return doDrafts($action[1],$request);
     }
     
     if ($action[0] === "archive") {
-        return doArchive($action[1],$_REQUEST);
+        return doArchive($action[1],$request);
     }
     
     if ($action[0] === "addresses") {
-        return doAddressBook($action[1],$_REQUEST);
+        return doAddressBook($action[1],$request);
     }
     
     if ($action[0] === "settings") {
-        return doSettings($action[1],$_REQUEST);
+        return doSettings($action[1],$request);
     }
     
     throw new Exception("Invalid Request ".$action[0]);
@@ -237,7 +263,12 @@ function doRequest($request) {
 try {
     $response = [];
     $response = doRequest($_REQUEST);
-    echo json_encode($response);
+    
+    $response = json_encode($response);
+    
+    echo "".str_pad("".strlen($response), 10, "0", STR_PAD_LEFT);
+    echo ":";
+    echo $response;
     
 } catch (Exception $e) {
     header("HTTP/1.1 500 Internal Server Error");

@@ -2,9 +2,8 @@
 
   "use strict";
 
-  var actionURL = "mailer.php";
-
   /* global $ */
+  /* global AjaxPost */
 
   function AttachmentViewer(id) {
     this.id = id;
@@ -42,11 +41,13 @@
 
     var that = this;
 
-    $.post(actionURL, { action: "" + this.type + ".attachments.enumerate", id: this.id }, null, "json")
+    var action = { action: "" + this.type + ".attachments.enumerate", id: this.id };
+
+    (new AjaxPost())
+      .sendJson(action)
       .done(function (data) { that.onEnumerate(data); })
-      .fail(function (jqxhr/*, textStatus, error*/) {
-        alert(jqxhr.responseText);
-      });
+      .fail(function (cause) { alert(cause); });
+
     return this;
   };
 
@@ -93,20 +94,21 @@
 
     var that = this;
 
-    $.post(actionURL, { action: "drafts.attachments.delete", id: this.id, attachment: name }, null, "json")
+    var action = { action: "drafts.attachments.delete", id: this.id, attachment: name };
+
+    (new AjaxPost())
+      .sendJson(action)
       .done(function (data) { that.onEnumerate(data); })
-      .fail(function (jqxhr/*, textStatus, error*/) {
-        alert(jqxhr.responseText);
-      });
+      .fail(function (cause) { alert(cause); });
   };
 
   AttachmentEditor.prototype.onUploaded = function (data) {
 
     this.getElement().find(".attachments-upload-progress").hide();
     this.getElement().find(".attachments-upload-input").show();
-    
+
     this.getElement().find(".attachments-image-input-form")[0].reset();
-    this.onEnumerate(JSON.parse(data));    
+    this.onEnumerate(data);
   };
 
 
@@ -116,7 +118,7 @@
 
     if (!files.length)
       return;
-    
+
     this.getElement().find(".attachments-upload-progress").show();
     this.getElement().find(".attachments-upload-input").hide();
 
@@ -125,22 +127,16 @@
     data.append("action", "drafts.attachments.upload");
     data.append("id", this.id);
 
-    $.ajax({
-      data: data,
-      type: "POST",
-      url: actionURL,
-      cache: false,
-      contentType: false,
-      processData: false
-    })
+    (new AjaxPost())
+      .sendForm(data)
       .done(function (data) { that.onUploaded(data); })
-      .fail(function (jqxhr/*, textStatus, error*/) {
+      .fail(function (cause) {
+        that.getElement().find(".attachments-upload-progress").hide();
+        that.getElement().find(".attachments-upload-input").show();
 
-        this.getElement().find(".attachments-upload-progress").hide();
-        this.getElement().find(".attachments-upload-input").show();
-
-        alert(jqxhr.responseText);
+        alert(cause);
       });
+
   };
 
   AttachmentEditor.prototype.onInitItem = function (parent, name) {

@@ -2,12 +2,12 @@
 
   "use strict";
 
-  var actionURL = "mailer.php";
-
   /* global $ */
+  /* global AjaxPost */
   /* global AbstractListItem */
   /* global MessagePreviewer */
   /* global AttachmentEditor */
+  /* global ProgressDialog */
 
   function Drafts(id) {
     this.id = id;
@@ -28,11 +28,12 @@
   Drafts.prototype.addNew = function () {
     var that = this;
 
-    $.post(actionURL, { action: "drafts.new", subject: "Unnamed" }, null, "json")
+    var action = { action: "drafts.new", subject: "Unnamed" };
+
+    (new AjaxPost())
+      .sendJson(action)
       .done(function (data) { that.onNew(data); })
-      .fail(function (jqxhr/*, textStatus, error*/) {
-        alert(jqxhr.responseText);
-      });
+      .fail(function (cause) { alert(cause); });
   };
 
   Drafts.prototype.onEnumerate = function (data) {
@@ -53,11 +54,13 @@
 
   Drafts.prototype.enumerate = function () {
     var that = this;
-    $.post(actionURL, { action: "drafts.enumerate" }, null, "json")
+
+    var action = { action: "drafts.enumerate" };
+
+    (new AjaxPost())
+      .sendJson(action)
       .done(function (data) { that.onEnumerate(data); })
-      .fail(function (jqxhr/*, textStatus, error*/) {
-        alert(jqxhr.responseText);
-      });
+      .fail(function (cause) { alert(cause); });
   };
 
   function DraftItem(id) {
@@ -181,10 +184,17 @@
     var that = this;
 
     var callback = function () {
-      // populate the Archive button..
-      that.sendRequest(
-        { action: "drafts.send", id: that.id, addresses: addresses },
-        function (data) { that.onSend(data); });
+
+      var dialog = (new ProgressDialog()).show();
+
+      var action = { action: "drafts.send", id: that.id, addresses: addresses };
+
+      (new AjaxPost())
+        .sendJson(action)
+        .done(function (data) { dialog.hide(); that.onSend(data); })
+        .progress(function (data) { dialog.update(data.progress, data.total); })
+        .fail(function (cause) { dialog.hide(); that.onError(cause); });
+
     };
 
     this.save(callback);
@@ -310,24 +320,17 @@
     data.append("action", "drafts.images.upload");
     data.append("id", this.id);
 
-    $.ajax({
-      data: data,
-      type: "POST",
-      url: actionURL,
-      cache: false,
-      contentType: false,
-      processData: false
-    })
+    (new AjaxPost())
+      .sendForm(data)
       .done(function (data) {
         $("#" + that.id)
           .find(".msg-editor-summernote")
-          .summernote('insertImage', JSON.parse(data).src);
+          .summernote('insertImage', data.src);
       })
-      .fail(function (jqxhr/*, textStatus, error*/) {
-        alert(jqxhr.responseText);
-      });
+      .fail(function (cause) { alert(cause); });
+
   };
 
   exports.Drafts = Drafts;
 
-})(window); 
+})(window);

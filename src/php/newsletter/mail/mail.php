@@ -206,7 +206,7 @@ class Mail {
         throw new Exception("Unknown or invalid mail configuration");
     }
     
-    function send() {
+    function send($callback) {
         
         $mail = $this->createMailer();
         
@@ -233,18 +233,26 @@ class Mail {
         }
         
         $error = [];
-        
+
+        $progress = 1;
+        $total = count($this->context["recipients"]);
+
         foreach ($this->context["recipients"] as $recipient) {
             $mail->addAddress($recipient);
+
+            //set_time_limit(60);
+
+            call_user_func($callback, $progress, $total);  
             
             if (!$mail->send()) {
                 $error[] = $mail->ErrorInfo;
             }
             
             $mail->clearAddresses();
+            $progress++;
         }
-        
-        
+
+
         if (count($error) !== 0) {
             throw new Exception("Sending message failed : ".implode(" ",$error[0]));
         }

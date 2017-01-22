@@ -2,9 +2,8 @@
 
   "use strict";
 
-  var actionURL = "mailer.php";
-
-  /* global $ */  
+  /* global $ */
+  /* global AjaxPost */
 
   function AbstractSettings() {
   }
@@ -49,11 +48,10 @@
     if (!("action" in request))
       return;
 
-    $.post(actionURL, request, null, "json")
+    (new AjaxPost())
+      .sendJson(request)
       .done(callback)
-      .fail(function (jqxhr/*, textStatus, error*/) {
-        alert(jqxhr.responseText);
-      });
+      .fail(function (cause) { alert(cause); });
 
     return this;
   };
@@ -178,7 +176,7 @@
   };
 
   ServerSettings.prototype.onSaved = function (/*data*/) {
-    var value = $("#newsletter-settings-server-type").text().toLowerCase();   
+    var value = $("#newsletter-settings-server-type").text().toLowerCase();
     if (value === "smtp")
       (new SmtpSettings()).save();
   };
@@ -286,16 +284,16 @@
     return this;
   };
 
-  RoleSettings.prototype.onLoad = function() {
+  RoleSettings.prototype.onLoad = function () {
     return { action: "settings.roles.get" };
   };
 
-  RoleSettings.prototype.onLoaded = function(data) {
+  RoleSettings.prototype.onLoaded = function (data) {
     $("#newsletter-settings-roles-settings").val(data.settings);
     $("#newsletter-settings-roles-addressbook").val(data.addressbook);
   };
 
-  RoleSettings.prototype.onSave = function() {
+  RoleSettings.prototype.onSave = function () {
     return {
       "action": "settings.roles.set",
       "settings": $("#newsletter-settings-roles-settings").val(),
