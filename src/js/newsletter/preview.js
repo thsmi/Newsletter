@@ -35,4 +35,4 @@
 
   exports.MessagePreviewer = MessagePreviewer;
 
-})(window);   
+})(window);

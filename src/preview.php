@@ -9,7 +9,7 @@ require_once("php/newsletter/mail/mail.php");
 function doRequest($request) {
     
     $item = null;
-
+    
     $type = strtolower($request["type"]);
     $id = $request["id"];
     
@@ -24,7 +24,7 @@ function doRequest($request) {
     $dir = pathinfo($template ,PATHINFO_DIRNAME);
     
     $template = file_get_contents($template);
-    if( $template === FALSE) {
+    if ($template === FALSE) {
         throw new Exception("Could not load template from $path");
     }
     

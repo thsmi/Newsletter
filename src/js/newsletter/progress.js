@@ -53,8 +53,6 @@
     return this;
   };
 
-
-
   exports.ProgressDialog = ProgressDialog;
 
-})(window);   
+})(window);

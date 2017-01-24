@@ -114,7 +114,7 @@ class Mail {
     private function setTemplate($path) {
         
         $template = @file_get_contents($path);
-        if( $template === FALSE) {
+        if ($template === FALSE) {
             throw new Exception("Could not load template from $path");
         }
         
@@ -158,22 +158,22 @@ class Mail {
         $this->context["message"] = $rewriter->getHtmlBody();
         $this->context["images"] = array_merge($this->context["images"], $rewriter->getImages());
     }
-
+    
     /**
-     * Defines to which recipients the mail should be send.
-     *
-     *  @param $addresses - the address book which contains the recipients.
-     *
-     *  @throws throws an excpetion in case the addres book is empty.
-     */
+    * Defines to which recipients the mail should be send.
+    *
+    *  @param $addresses - the address book which contains the recipients.
+    *
+    *  @throws throws an excpetion in case the addres book is empty.
+    */
     function setAddresses(AddressBookItem $addresses) {
-
+        
         $recipient = $addresses->getRecipients();
-
+        
         if (count($recipient) === 0) {
             throw new Exception("Can not send a mail to an empty address book.");
         }
-
+        
         $this->context["recipients"] = $recipient;
     }
     
@@ -233,16 +233,16 @@ class Mail {
         }
         
         $error = [];
-
+        
         $progress = 1;
         $total = count($this->context["recipients"]);
-
+        
         foreach ($this->context["recipients"] as $recipient) {
             $mail->addAddress($recipient);
-
+            
             //set_time_limit(60);
-
-            call_user_func($callback, $progress, $total);  
+            
+            call_user_func($callback, $progress, $total);
             
             if (!$mail->send()) {
                 $error[] = $mail->ErrorInfo;
@@ -251,8 +251,8 @@ class Mail {
             $mail->clearAddresses();
             $progress++;
         }
-
-
+        
+        
         if (count($error) !== 0) {
             throw new Exception("Sending message failed : ".implode(" ",$error[0]));
         }
@@ -273,7 +273,7 @@ class Mail {
         
         if (rename($source.$id, "".$target.$id) === false) {
             throw new Exception("Failed to move message $id to archive");
-        };
+        }
         
         $archiveItem = (new Archive())->load($id);
         $archiveItem->setMessage($message);

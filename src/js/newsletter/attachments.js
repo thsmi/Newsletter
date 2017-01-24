@@ -160,4 +160,4 @@
   exports.AttachmentViewer = AttachmentViewer;
   exports.AttachmentEditor = AttachmentEditor;
 
-})(window);   
+})(window);
