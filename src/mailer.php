@@ -18,7 +18,7 @@ function onSendProgress($progress, $total/*, $message*/) {
     
     $response = json_encode($response);
     
-    echo "".str_pad("".strlen($response), 10, "0", STR_PAD_LEFT);
+    echo "3:".str_pad("".strlen($response), 10, "0", STR_PAD_LEFT);
     echo ":";
     echo $response;
     
@@ -266,7 +266,7 @@ try {
     
     $response = json_encode($response);
     
-    echo "".str_pad("".strlen($response), 10, "0", STR_PAD_LEFT);
+    echo "4:".str_pad("".strlen($response), 10, "0", STR_PAD_LEFT);
     echo ":";
     echo $response;
     

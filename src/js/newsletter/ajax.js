@@ -18,29 +18,6 @@
   };
 
 
-  JsonDeferred.prototype.onLoading = function (xhr) {
-
-    try {
-      if (this.callbacks.onProgress === null || typeof (this.callbacks.onProgress) === "undefined")
-        return;
-
-      var data = this.getNextResponse();
-
-      this.callbacks.onProgress(data);
-    }
-    catch (ex) {
-
-      if (this.callbacks.onFail === null || typeof (this.callbacks.onFail) === "undefined")
-        return;
-
-      debugger;
-      this.callbacks.onFail(xhr.responseText);
-      return;
-    }
-
-    return;
-  };
-
   JsonDeferred.prototype.done = function (callback) {
     this.callbacks.onDone = callback;
     return this;
@@ -56,6 +33,31 @@
     return this;
   };
 
+  JsonDeferred.prototype.isLoading = function () {
+    var response = this.xhr.responseText;
+
+    if (response.length - this.offset <= 12)
+      return false;
+
+    return (response.substr(this.offset, 1) === "3");
+  };
+
+  JsonDeferred.prototype.isDone = function () {
+    var response = this.xhr.responseText;
+
+    if (response.length - this.offset <= 12)
+      return false;
+
+    return (response.substr(this.offset, 1) === "4");
+  };
+
+  JsonDeferred.prototype.hasNextResponse = function () {
+    if (this.xhr.responseText.length > this.offset)
+      return true;
+
+    return false;
+  };
+
   JsonDeferred.prototype.getNextResponse = function () {
 
     if (!this.isRequestSuccessful(this.xhr))
@@ -63,16 +65,13 @@
 
     var response = this.xhr.responseText;
 
-    if (response.length - this.offset === 0)
-      return [];
-
-    if (response.length - this.offset <= 10)
+    if (response.length - this.offset <= 12)
       throw new Error("Invalid Request, request too short");
 
-    if (response[this.offset + 10] !== ":")
+    if (response[this.offset + 12] !== ":")
       throw new Error("Invalid Request, no length separator");
 
-    var length = response.substr(this.offset, 10);
+    var length = response.substr(this.offset + 2, 10);
 
     if (/^(\-|\+)?([0-9]+|Infinity)$/.test(length) === false)
       throw new Error("Invalid Request, length is not a number");
@@ -82,8 +81,8 @@
     if (Number.isNaN(length))
       throw new Error("Invalid length, is not a number");
 
-    var data = response.substr(this.offset + 11, length);
-    this.offset += 11 + length;
+    var data = response.substr(this.offset + 13, length);
+    this.offset += 13 + length;
 
     if (data === "")
       return [];
@@ -91,22 +90,50 @@
     return JSON.parse(data);
   };
 
-  JsonDeferred.prototype.onDone = function (xhr) {
 
+  JsonDeferred.prototype.onLoading = function (data) {
+
+    if (this.callbacks.onProgress === null || typeof (this.callbacks.onProgress) === "undefined")
+      return;
+
+    this.callbacks.onProgress(data);
+    return;
+  };
+
+
+  JsonDeferred.prototype.onDone = function (data) {
+    if (this.callbacks.onDone === null || typeof (this.callbacks.onDone) === "undefined")
+      return;
+
+    this.callbacks.onDone(data);
+  };
+
+  JsonDeferred.prototype.onRequest = function (xhr) {
     try {
-      var data = this.getNextResponse();
 
-      if (this.callbacks.onDone === null || typeof (this.callbacks.onDone) === "undefined")
-        return;
+      // first parse all progress message then expect one done.
+      while (this.hasNextResponse()) {
 
-      this.callbacks.onDone(data);
-    }
-    catch (ex) {
+        if (this.isLoading()) {
+          this.onLoading(this.getNextResponse());
+          continue;
+        }
+
+        if (this.isDone()) {
+          this.onDone(this.getNextResponse());
+          return;
+        }
+
+        // no handler so skip
+        throw new Error("Invalid Response");
+      }
+
+    } catch (ex) {
 
       if (this.callbacks.onFail === null || typeof (this.callbacks.onFail) === "undefined")
         return;
 
-      debugger;
+      this.offset = xhr.responseText.length;
       this.callbacks.onFail(xhr.responseText);
       return;
     }
@@ -117,16 +144,11 @@
   JsonDeferred.prototype.onReadyStateChange = function () {
 
     // 4 = The operation is complete
-    if (this.xhr.readyState === 4) {
-      this.onDone(this.xhr);
+    if (this.xhr.readyState !== 4 && this.xhr.readyState !== 3)
       return;
-    }
 
-    // 3 = Downloading; responseText holds partial data.
-    if (this.xhr.readyState === 3) {
-      this.onLoading(this.xhr);
-      return;
-    }
+    this.onRequest(this.xhr);
+    return;
 
     /*
     0	UNSENT	Client has been created. open() not called yet.
