@@ -152,6 +152,14 @@
       that.onServerTypeChange();
     });
 
+    $("#newsletter-settings-server-reset").click(function () {
+      that.load();
+    });
+
+    $("#newsletter-settings-server-save").click(function () {
+      that.save();
+    });
+
     this.load();
     return this;
   };
@@ -202,7 +210,6 @@
   SmtpSettings.prototype.constructor = SmtpSettings;
 
   SmtpSettings.prototype.init = function () {
-    var that = this;
 
     $("#newsletter-settings-server-smtp-security-type-none").click(function () {
       $("#newsletter-settings-server-smtp-security-type").text("");
@@ -223,15 +230,6 @@
 
     $("#newsletter-settings-server-smtp-authentication-type-false").click(function () {
       $("#newsletter-settings-server-smtp-authentication-type").text("false");
-    });
-
-
-    $("#newsletter-settings-server-reset").click(function () {
-      that.load();
-    });
-
-    $("#newsletter-settings-server-save").click(function () {
-      that.save();
     });
 
     this.load();
